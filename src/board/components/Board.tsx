@@ -69,8 +69,8 @@ export const Board: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleModalClose} color='error'>Cancel</Button>
-          <Button onClick={onAddColumn}>Create</Button>
+          <Button onClick={handleModalClose} color='error' variant='contained'>Cancel</Button>
+          <Button onClick={onAddColumn} color='success' variant='contained'>Create</Button>
         </DialogActions>
       </Dialog>
     </BoardContainer>
