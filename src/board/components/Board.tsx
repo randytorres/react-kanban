@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
@@ -9,14 +9,73 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid'
+import { useDrop } from 'react-dnd'
+
 
 import { Column, ColumnProps} from './Column'
 
 export const Board: React.FC = () => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [collectedProps, drop] = useDrop(() => ({
+    // The type (or types) to accept - strings or symbols
+    accept: 'COLUMNS',
+    drop: (item, monitor) => {
+      console.info('ITEM', item)
+    },
+    hover(item: any, monitor) {
+      if (!ref.current) {
+        return
+      }
+      const dragIndex = item.index
+      const hoverIndex = index
+
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return
+      }
+
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current?.getBoundingClientRect()
+
+      // Get vertical middle
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset()
+
+      // Get pixels to the top
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top
+
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return
+      }
+
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return
+      }
+
+      // Time to actually perform the action
+      // moveCard(dragIndex, hoverIndex)
+
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex
+    }
+  }))
   const [columns, setColumns] = useState<ColumnProps[]>([])
   const [modalOpen, setModalOpen] = useState(false)
   const [newColumnName, setNewColumnName] = useState('')
 
+  console.info('Droping', collectedProps)
   const handleModalOpen = () => {
     setModalOpen(true)
   }
@@ -45,39 +104,34 @@ export const Board: React.FC = () => {
     handleModalClose()
   }
 
-  const onDragStart = (e: any) => {
-    e.dataTransfer.setData('column_id', e.target.id);
-    console.log('dragstart on div: ', e.target.id);
-  }
+  // const onDragStart = (e: any) => {
+  //   e.dataTransfer.setData('column_id', e.target.id);
+  //   console.log('Dragstart on div: ', e.target.id);
+  // }
 
-  const onDrop = (e: any) => {
-    e.preventDefault()
+  // const onDrop = (e: any) => {
+  //   e.preventDefault()
 
-    const columnId = e.dataTransfer.getData('column_id');
+  //   const columnId = e.dataTransfer.getData('column_id');
 
-    console.info('Board - Drop', columnId)
+  //   console.info('Board - Drop', columnId)
 
-    // let tasks = this.state.tasks.filter((task) => {
-    //     if (task.taskName == taskName) {
-    //         task.type = cat;
-    //     }
-    //     return task;
-    // });
+  //   // const droppedColumn = columns.find(col => col.id === columnId)
 
-    // this.setState({
-    //     ...this.state,
-    //     tasks
-    // });
-  }
+  //   // const newColumns = [
+  //   //   ...columns.filter(col => col.id !== columnId),
+  //   // ]
+  // }
 
-  const onDragOver = (e: any) => {
-      e.preventDefault();
-      console.info('Board - Drag Over')
-  }
+  // const onDragOver = (e: any) => {
+  //     e.preventDefault();
+  //     console.info('Column - Drag Over')
+  // }
 
+  drop(ref)
   return (
-    <BoardContainer onDrop={onDrop}>
-      {columns.map(col => <Column key={col.id} {...col} onDragOver={onDragOver} onDragStart={onDragStart} />)}
+    <BoardContainer ref={ref}>
+      {columns.map((col, index) => <Column key={col.id} index={index} {...col} />)}
       <AddColumn onClick={handleModalOpen}>
         <AddIcon />
         Add Column
