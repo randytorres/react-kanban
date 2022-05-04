@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid'
-import { useDrag } from 'react-dnd'
+import { Droppable, Draggable } from '@react-forked/dnd'
 
 import { Card, CardProps } from './Card';
 
@@ -15,26 +15,15 @@ export type ColumnProps = {
   id: string
   name: string
   order: number
-  index: number
+  index?: any // TODO: Remove this
 }
 
 export const Column: React.FC<ColumnProps> = (props) => {
-  const [stuff, drag, dragPreview] = useDrag(() => ({
-		// "type" is required. It is used by the "accept" specification of drop targets.
-    type: 'COLUMNS',
-		// The collect function utilizes a "monitor" instance (see the Overview for what this is)
-		// to pull important pieces of state from the DnD system.
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging()
-    }),
-    item: {...props, index}
-  }))
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
   const [cards, setCards] = useState<CardProps[]>([])
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
-  const { id, name } = props
-  console.info('stuff', stuff)
+  const { id, index, name } = props
 
   const onOpenAddCardDisplay = () =>{
     setAddCardDisplayOpen(true)
@@ -66,68 +55,70 @@ export const Column: React.FC<ColumnProps> = (props) => {
   }
 
   return (
-    <div ref={dragPreview}>
-      <ColumnContainer
-        id={id}
-        ref={drag}
-      >
-        <HeaderContainer>
-          <Title>{name}</Title>
-          <IconContainer>
-            <IconButton onClick={onOpenAddCardDisplay} disableRipple>
-              <AddIcon />
-            </IconButton>
-            <IconButton onClick={() => {}} disableRipple>
-              <FontAwesomeIcon icon={faEllipsis} />
-            </IconButton>
-          </IconContainer>
-        </HeaderContainer>
-        <Content>
-          {addCardDisplayOpen && (
-            <AddCardContainer>
-              <TextField
-                multiline
-                autoFocus
-                margin='dense'
-                label='Enter a name'
-                fullWidth
-                variant='standard'
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCardName(e.target.value)}
-                value={cardName}
-              />
-              <TextField
-                autoFocus
-                margin='dense'
-                label='Description'
-                fullWidth
-                variant='standard'
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
-                multiline
-                value={description}
-              />
-              <ActionContainer>
-                <AddButton
-                  onClick={onAddCard}
-                  color='success'
-                  variant='contained'
-                >
-                  Add
-                </AddButton>
-                <CancelButton
-                  onClick={onCloseAddCardDisplay}
-                  color='error'
-                  variant='contained'
-                >
-                  Cancel
-                </CancelButton>
-              </ActionContainer>
-            </AddCardContainer>
-          )}
-        
-          {cards.map(card => <Card key={card.id} {...card} />)} 
-        </Content>
-      </ColumnContainer>
-    </div>
+    <Draggable draggableId={id} index={index}>
+      {(provided) => (
+        <ColumnContainer
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <HeaderContainer>
+            <Title>{name}</Title>
+            <IconContainer>
+              <IconButton onClick={onOpenAddCardDisplay} disableRipple>
+                <AddIcon />
+              </IconButton>
+              <IconButton onClick={() => {}} disableRipple>
+                <FontAwesomeIcon icon={faEllipsis} />
+              </IconButton>
+            </IconContainer>
+          </HeaderContainer>
+          <Content>
+            {addCardDisplayOpen && (
+              <AddCardContainer>
+                <TextField
+                  multiline
+                  autoFocus
+                  margin='dense'
+                  label='Enter a name'
+                  fullWidth
+                  variant='standard'
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCardName(e.target.value)}
+                  value={cardName}
+                />
+                <TextField
+                  autoFocus
+                  margin='dense'
+                  label='Description'
+                  fullWidth
+                  variant='standard'
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
+                  multiline
+                  value={description}
+                />
+                <ActionContainer>
+                  <AddButton
+                    onClick={onAddCard}
+                    color='success'
+                    variant='contained'
+                  >
+                    Add
+                  </AddButton>
+                  <CancelButton
+                    onClick={onCloseAddCardDisplay}
+                    color='error'
+                    variant='contained'
+                  >
+                    Cancel
+                  </CancelButton>
+                </ActionContainer>
+              </AddCardContainer>
+            )}
+          
+            {cards.map(card => <Card key={card.id} {...card} />)} 
+          </Content>
+        </ColumnContainer>
+      )}
+    </Draggable>
   )
 }
 

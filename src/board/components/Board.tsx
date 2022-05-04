@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
@@ -9,73 +9,16 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid'
-import { useDrop } from 'react-dnd'
+import { DragDropContext, Droppable, resetServerContext } from '@react-forked/dnd'
 
 
 import { Column, ColumnProps} from './Column'
 
 export const Board: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null)
-  const [collectedProps, drop] = useDrop(() => ({
-    // The type (or types) to accept - strings or symbols
-    accept: 'COLUMNS',
-    drop: (item, monitor) => {
-      console.info('ITEM', item)
-    },
-    hover(item: any, monitor) {
-      if (!ref.current) {
-        return
-      }
-      const dragIndex = item.index
-      const hoverIndex = index
-
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect()
-
-      // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset()
-
-      // Get pixels to the top
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return
-      }
-
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return
-      }
-
-      // Time to actually perform the action
-      // moveCard(dragIndex, hoverIndex)
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex
-    }
-  }))
   const [columns, setColumns] = useState<ColumnProps[]>([])
   const [modalOpen, setModalOpen] = useState(false)
   const [newColumnName, setNewColumnName] = useState('')
 
-  console.info('Droping', collectedProps)
   const handleModalOpen = () => {
     setModalOpen(true)
   }
@@ -104,59 +47,113 @@ export const Board: React.FC = () => {
     handleModalClose()
   }
 
-  // const onDragStart = (e: any) => {
-  //   e.dataTransfer.setData('column_id', e.target.id);
-  //   console.log('Dragstart on div: ', e.target.id);
-  // }
+  const onDragEnd = (result: any) => {
+    console.info('result', result)
+    const { destination, source, draggableId, type } = result;
+    //If there is no destination
+    if (!destination) { return }
 
-  // const onDrop = (e: any) => {
-  //   e.preventDefault()
+    //If source and destination is the same
+    if (destination.droppableId === source.droppableId && destination.index === source.index) { return }
 
-  //   const columnId = e.dataTransfer.getData('column_id');
+    // //If you're dragging columns
+    // if (type === 'column') {
+    //   const newColumnOrder = Array.from(data.columnOrder);
+    //   newColumnOrder.splice(source.index, 1);
+    //   newColumnOrder.splice(destination.index, 0, draggableId);
+    //   const newState = {
+    //     ...data,
+    //     columnOrder: newColumnOrder
+    //   }
+    //   setData(newState)
+    //   return;
+    // }
 
-  //   console.info('Board - Drop', columnId)
+    // //Anything below this happens if you're dragging tasks
+    // const start = data.columns[source.droppableId];
+    // const finish = data.columns[destination.droppableId];
 
-  //   // const droppedColumn = columns.find(col => col.id === columnId)
+    // //If dropped inside the same column
+    // if (start === finish) {
+    //   const newTaskIds = Array.from(start.taskIds);
+    //   newTaskIds.splice(source.index, 1);
+    //   newTaskIds.splice(destination.index, 0, draggableId);
+    //   const newColumn = {
+    //     ...start,
+    //     taskIds: newTaskIds
+    //   }
+    //   const newState = {
+    //     ...data,
+    //     columns: {
+    //       ...data.columns,
+    //       [newColumn.id]: newColumn
+    //     }
+    //   }
+    //   setData(newState)
+    //   return;
+    // }
 
-  //   // const newColumns = [
-  //   //   ...columns.filter(col => col.id !== columnId),
-  //   // ]
-  // }
+    // //If dropped in a different column
+    // const startTaskIds = Array.from(start.taskIds);
+    // startTaskIds.splice(source.index, 1);
+    // const newStart = {
+    //   ...start,
+    //   taskIds: startTaskIds
+    // }
 
-  // const onDragOver = (e: any) => {
-  //     e.preventDefault();
-  //     console.info('Column - Drag Over')
-  // }
+    // const finishTaskIds = Array.from(finish.taskIds);
+    // finishTaskIds.splice(destination.index, 0, draggableId);
+    // const newFinish = {
+    //   ...finish,
+    //   taskIds: finishTaskIds
+    // }
 
-  drop(ref)
+    // const newState = {
+    //   ...data,
+    //   columns: {
+    //     ...data.columns,
+    //     [newStart.id]: newStart,
+    //     [newFinish.id]: newFinish
+    //   }
+    // }
+
+    // setData(newState)
+  }
+
   return (
-    <BoardContainer ref={ref}>
-      {columns.map((col, index) => <Column key={col.id} index={index} {...col} />)}
-      <AddColumn onClick={handleModalOpen}>
-        <AddIcon />
-        Add Column
-      </AddColumn>
-      <Dialog
-        open={modalOpen}
-        onClose={handleModalClose} 
-      >
-        <DialogTitle>Add a Column</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin='dense'
-            label='Column Name'
-            fullWidth
-            variant='standard'
-            onChange={onChangeText}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModalClose} color='error' variant='contained'>Cancel</Button>
-          <Button onClick={onAddColumn} color='success' variant='contained'>Create</Button>
-        </DialogActions>
-      </Dialog>
-    </BoardContainer>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId='test' direction='horizontal' type='column'>
+        {(provided) => (
+          <BoardContainer {...provided.droppableProps} ref={provided.innerRef}>
+            {columns.map((col, index) => <Column key={col.id} index={index} {...col} />)}
+            <AddColumn onClick={handleModalOpen}>
+              <AddIcon />
+              Add Column
+            </AddColumn>
+            <Dialog
+              open={modalOpen}
+              onClose={handleModalClose} 
+            >
+              <DialogTitle>Add a Column</DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin='dense'
+                  label='Column Name'
+                  fullWidth
+                  variant='standard'
+                  onChange={onChangeText}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleModalClose} color='error' variant='contained'>Cancel</Button>
+                <Button onClick={onAddColumn} color='success' variant='contained'>Create</Button>
+              </DialogActions>
+            </Dialog>
+          </BoardContainer>
+        )}
+      </Droppable>
+    </DragDropContext>
   )
 }
 
