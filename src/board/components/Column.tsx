@@ -10,20 +10,18 @@ import { v4 as uuidv4 } from 'uuid'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { Card, CardProps } from './Card';
+import { ICard, IColumn } from '../../global/interfaces';
 
-export type ColumnProps = {
-  id: string
-  name: string
-  order: number
-  index?: any // TODO: Remove this
+export interface ColumnProps extends IColumn {
+  cards: ICard[]
+  onAddCard: (cardName: string, description: string, columnId: string) => void
 }
 
 export const Column: React.FC<ColumnProps> = (props) => {
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
-  const [cards, setCards] = useState<CardProps[]>([])
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
-  const { id, index, name } = props
+  const { id, index, name, cards } = props
 
   const onOpenAddCardDisplay = () =>{
     setAddCardDisplayOpen(true)
@@ -34,25 +32,15 @@ export const Column: React.FC<ColumnProps> = (props) => {
   }
 
   const onAddCard = () => {
-    const newCard = {
-      id: uuidv4(),
-      name: cardName,
-      description: description,
-      createdAt: new Date(),
-      status: '',
-      order: cards.length + 1
-    }
-    const newCards = [
-      ...cards,
-      newCard,
-    ]
-
-    setCards(newCards)
+    props.onAddCard(cardName, description, id)
 
     setCardName('')
     setDescription('')
-    console.info('done')
   }
+
+  const cardsWithColumnData = cards
+    .filter(card => card.columnId === id)
+    .map((card, index) => <Card key={card.id} {...card}  />)
 
   return (
     <Draggable draggableId={id} index={index} key={id}>
@@ -115,7 +103,16 @@ export const Column: React.FC<ColumnProps> = (props) => {
               </AddCardContainer>
             )}
           
-            {cards.map(card => <Card key={card.id} {...card} />)} 
+            <Droppable droppableId={id} type='task'>
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {cardsWithColumnData}
+                </div>
+              )}
+            </Droppable>
           </Content>
         </ColumnContainer>
       )}

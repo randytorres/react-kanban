@@ -9,13 +9,14 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid'
-import { DragDropContext, Droppable, resetServerContext } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 
-
-import { Column, ColumnProps} from './Column'
+import { Column } from './Column'
+import { ICard, IColumn } from '../../global/interfaces';
 
 export const Board: React.FC = () => {
-  const [columns, setColumns] = useState<ColumnProps[]>([])
+  const [columns, setColumns] = useState<IColumn[]>([])
+  const [cards, setCards] = useState<ICard[]>([])
   const [modalOpen, setModalOpen] = useState(false)
   const [newColumnName, setNewColumnName] = useState('')
 
@@ -32,10 +33,12 @@ export const Board: React.FC = () => {
   }
 
   const onAddColumn = () => {
+    const newIndex = columns.length
     const newColumn = {
       id: uuidv4(),
       name: newColumnName,
-      order: columns.length + 1
+      order: newIndex,
+      index: newIndex
     }
 
     const newColumns = [
@@ -47,85 +50,109 @@ export const Board: React.FC = () => {
     handleModalClose()
   }
 
+  const onAddCard = (cardName: string, description: string, columnId: string) => {
+    const cardsInColumn = cards.filter(card => card.columnId === columnId)
+    const newIndex = cardsInColumn.length
+    const newCard = {
+      id: uuidv4(),
+      columnId,
+      name: cardName,
+      description: description,
+      createdAt: new Date(),
+      status: '',
+      order: newIndex,
+      index: newIndex,
+    }
+    const newCards = [
+      ...cards,
+      newCard,
+    ]
+
+    setCards(newCards)
+  }
+
+  /**
+   * Is called with columns and cards are moved.
+   */
   const onDragEnd = (result: any) => {
-    console.info('result', result)
     const { destination, source, draggableId, type } = result;
-    //If there is no destination
     if (!destination) { return }
 
-    //If source and destination is the same
     if (destination.droppableId === source.droppableId && destination.index === source.index) { return }
 
-    // //If you're dragging columns
-    // if (type === 'column') {
-    //   const newColumnOrder = Array.from(data.columnOrder);
-    //   newColumnOrder.splice(source.index, 1);
-    //   newColumnOrder.splice(destination.index, 0, draggableId);
-    //   const newState = {
-    //     ...data,
-    //     columnOrder: newColumnOrder
-    //   }
-    //   setData(newState)
-    //   return;
-    // }
+    /**
+     * Handle Column Moved
+     */
+    if (type === 'column') {
+      const columnToMove = columns.find(col => col.id === draggableId)
+      if (!columnToMove) return
 
-    // //Anything below this happens if you're dragging tasks
-    // const start = data.columns[source.droppableId];
-    // const finish = data.columns[destination.droppableId];
+      let reOrderedColumns = columns
+      reOrderedColumns.splice(source.index, 1);
+      reOrderedColumns.splice(destination.index, 0, columnToMove);
+      // TODO: Do we need columns prop?
+      reOrderedColumns = reOrderedColumns.map((col, index) => ({ ...col, order: index, index: index }))
+      setColumns(reOrderedColumns)
+      return;
+    }
 
-    // //If dropped inside the same column
-    // if (start === finish) {
-    //   const newTaskIds = Array.from(start.taskIds);
-    //   newTaskIds.splice(source.index, 1);
-    //   newTaskIds.splice(destination.index, 0, draggableId);
-    //   const newColumn = {
-    //     ...start,
-    //     taskIds: newTaskIds
-    //   }
-    //   const newState = {
-    //     ...data,
-    //     columns: {
-    //       ...data.columns,
-    //       [newColumn.id]: newColumn
-    //     }
-    //   }
-    //   setData(newState)
-    //   return;
-    // }
+    /**
+     * Handle Card Moved
+     * **/
+    const startColumn = columns.find(col => col.id === source.droppableId)
+    const finishColumn = columns.find(col => col.id === destination.droppableId)
+    const cardToMove = cards.find(card => card.id === draggableId)
 
-    // //If dropped in a different column
-    // const startTaskIds = Array.from(start.taskIds);
-    // startTaskIds.splice(source.index, 1);
-    // const newStart = {
-    //   ...start,
-    //   taskIds: startTaskIds
-    // }
+    if (!cardToMove || !finishColumn) return
 
-    // const finishTaskIds = Array.from(finish.taskIds);
-    // finishTaskIds.splice(destination.index, 0, draggableId);
-    // const newFinish = {
-    //   ...finish,
-    //   taskIds: finishTaskIds
-    // }
+    // Card dropped inside same column
+    if (startColumn && finishColumn && startColumn.id === finishColumn.id) {
+      let cardsInDroppedColumn = cards.filter(card => card.columnId === startColumn.id) 
+      cardsInDroppedColumn.splice(source.index, 1);
+      cardsInDroppedColumn.splice(destination.index, 0, cardToMove);
 
-    // const newState = {
-    //   ...data,
-    //   columns: {
-    //     ...data.columns,
-    //     [newStart.id]: newStart,
-    //     [newFinish.id]: newFinish
-    //   }
-    // }
+      cardsInDroppedColumn = cardsInDroppedColumn.map((card, index) => ({ ...card, order: index, index: index }))
+      setCards([
+        ...cards.filter(card => card.columnId !== startColumn.id),
+        ...cardsInDroppedColumn
+      ])
+      return;
+    }
 
-    // setData(newState)
+    // Card dropped in different column
+    const cardsInStartColumn = cards.filter(card => card.columnId === source.droppableId)
+    cardsInStartColumn.splice(source.index, 1)
+
+    const cardsInFinishColumn = cards.filter(card => card.columnId === destination.droppableId)
+    const newCard = {
+      ...cardToMove,
+      columnId: finishColumn?.id,
+    }
+    cardsInFinishColumn.splice(destination.index, 0, newCard)
+
+    const updatedCardInStartColumn = cardsInStartColumn.map((card, index) => ({ ...card, index, order: index }))
+    const updatedCardInFinishColumn = cardsInFinishColumn.map((card, index) => ({ ...card, index, order: index }))
+    setCards([
+      ...cards.filter(card => card.columnId !== startColumn?.id && card.columnId !== destination.droppableId),
+      ...updatedCardInStartColumn,
+      ...updatedCardInFinishColumn,
+    ])
   }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId='test' direction='horizontal' type='column'>
+      <Droppable droppableId='all-columns' direction='horizontal' type='column'>
         {(provided) => (
           <BoardContainer {...provided.droppableProps} ref={provided.innerRef}>
-            {columns.map((col, index) => <Column key={col.id} index={index} {...col} />)}
+            {columns.map((col, index) => (
+              <Column
+                {...col}
+                key={col.id}
+                index={index}
+                onAddCard={onAddCard}
+                cards={cards}
+              />
+            ))}
             <AddColumn onClick={handleModalOpen}>
               <AddIcon />
               Add Column
