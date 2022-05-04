@@ -58,8 +58,9 @@ export const Column: React.FC<ColumnProps> = (props) => {
     <Draggable draggableId={id} index={index} key={id}>
       {(provided) => (
         <ColumnContainer
-          {...provided.draggableProps}
           ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
         >
           <HeaderContainer>
             <Title>{name}</Title>
