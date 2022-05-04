@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid'
-import { Droppable, Draggable } from '@react-forked/dnd'
+import { Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { Card, CardProps } from './Card';
 
@@ -55,11 +55,11 @@ export const Column: React.FC<ColumnProps> = (props) => {
   }
 
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={id} index={index} key={id}>
       {(provided) => (
         <ColumnContainer
-          ref={provided.innerRef}
           {...provided.draggableProps}
+          ref={provided.innerRef}
         >
           <HeaderContainer>
             <Title>{name}</Title>

@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid'
-import { DragDropContext, Droppable, resetServerContext } from '@react-forked/dnd'
+import { DragDropContext, Droppable, resetServerContext } from 'react-beautiful-dnd'
 
 
 import { Column, ColumnProps} from './Column'
