@@ -45,10 +45,39 @@ export const Board: React.FC = () => {
     handleModalClose()
   }
 
+  const onDragStart = (e: any) => {
+    e.dataTransfer.setData('column_id', e.target.id);
+    console.log('dragstart on div: ', e.target.id);
+  }
+
+  const onDrop = (e: any) => {
+    e.preventDefault()
+
+    const columnId = e.dataTransfer.getData('column_id');
+
+    console.info('Board - Drop', columnId)
+
+    // let tasks = this.state.tasks.filter((task) => {
+    //     if (task.taskName == taskName) {
+    //         task.type = cat;
+    //     }
+    //     return task;
+    // });
+
+    // this.setState({
+    //     ...this.state,
+    //     tasks
+    // });
+  }
+
+  const onDragOver = (e: any) => {
+      e.preventDefault();
+      console.info('Board - Drag Over')
+  }
 
   return (
-    <BoardContainer>
-      {columns.map(col => <Column key={col.id} {...col} />)}
+    <BoardContainer onDrop={onDrop}>
+      {columns.map(col => <Column key={col.id} {...col} onDragOver={onDragOver} onDragStart={onDragStart} />)}
       <AddColumn onClick={handleModalOpen}>
         <AddIcon />
         Add Column

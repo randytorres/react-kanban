@@ -14,6 +14,8 @@ export type ColumnProps = {
   id: string
   name: string
   order: number
+  onDragStart?: any
+  onDragOver?: any
 }
 
 export const Column: React.FC<ColumnProps> = (props) => {
@@ -21,7 +23,15 @@ export const Column: React.FC<ColumnProps> = (props) => {
   const [cards, setCards] = useState<CardProps[]>([])
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
-  const { name } = props
+  const { id, name, onDragStart, onDragOver } = props
+
+  const onOpenAddCardDisplay = () =>{
+    setAddCardDisplayOpen(true)
+  }
+
+  const onCloseAddCardDisplay = () => {
+    setAddCardDisplayOpen(false)
+  }
 
   const onAddCard = () => {
     const newCard = {
@@ -38,19 +48,19 @@ export const Column: React.FC<ColumnProps> = (props) => {
     ]
 
     setCards(newCards)
-  }
 
-
-  const onOpenAddCardDisplay = () =>{
-    setAddCardDisplayOpen(true)
-  }
-
-  const onCloseAddCardDisplay = () => {
-    setAddCardDisplayOpen(false)
+    setCardName('')
+    setDescription('')
+    console.info('done')
   }
 
   return (
-    <ColumnContainer>
+    <ColumnContainer
+      id={id}
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+    >
       <HeaderContainer>
         <Title>{name}</Title>
         <IconContainer>
@@ -73,6 +83,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
               fullWidth
               variant='standard'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCardName(e.target.value)}
+              value={cardName}
             />
             <TextField
               autoFocus
@@ -82,6 +93,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
               variant='standard'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
               multiline
+              value={description}
             />
             <ActionContainer>
               <AddButton
@@ -102,7 +114,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
           </AddCardContainer>
         )}
        
-        {cards.map(card => <Card {...card} />)} 
+        {cards.map(card => <Card key={card.id} {...card} />)} 
       </Content>
     </ColumnContainer>
   )
