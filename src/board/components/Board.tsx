@@ -157,7 +157,6 @@ export const Board: React.FC = () => {
   }
 
   const onArchiveCard = () => {
-    console.info('Archiving', cardToEdit)
     const newCards = Array.from(cards)
 
     if (!cardToEdit) return
@@ -287,6 +286,8 @@ export const Board: React.FC = () => {
           </BoardContainer>
         )}
       </Droppable>
+
+      {/* Column Actions */}
       <ColumnMenu
         anchorEl={anchorEl}
         handleColumnMenuClose={handleColumnMenuClose}
@@ -330,18 +331,23 @@ export const Board: React.FC = () => {
 }
 
 const BoardContainer = styled.div({
+  height: '100%',
   padding: 20,
   flexDirection: 'row',
   display: 'flex',
+  width: 'fit-content',
+  overflowX: 'scroll',
 })
 
 const AddColumn = styled.button({
   cursor: 'pointer',
   width: 315,
+  height: 115,
   padding: '40px 0',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   borderWidth: 1,
-  borderStyle: 'dotted'
+  borderStyle: 'dotted',
+  borderRadius: 5,
 })

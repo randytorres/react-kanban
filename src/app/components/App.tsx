@@ -1,19 +1,24 @@
 import React from 'react';
+import styled from '@emotion/styled'
 import { Typography } from '@mui/material';
 
 import { Board } from '../../board';
 
-
 export const App: React.FC = () => {
   return (
-    <div>
-      <Typography
+    <>
+      {/* <Header
         align='center'
         variant='h2'
       >
         React Kanban Board
-      </Typography>
+      </Header> */}
       <Board />
-    </div>
+    </>
   );
 }
+
+const Header = styled(Typography)({
+  marginTop: 20,
+  marginBottom: 20,
+})

@@ -132,6 +132,7 @@ const ColumnContainer = styled.div({
   border: '1px solid #000',
   borderRadius: 5,
   marginRight: 16,
+  overflowY: 'scroll',
 })
 
 const HeaderContainer = styled.div({
