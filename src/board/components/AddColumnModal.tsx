@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 
 interface AddColumnModalProps {
   addColumnModalOpen: boolean 
-  handleAddColumnModalClose: () => void
+  toggleAddColumnModal: () => void
   onAddColumn: (columnName: string) => void 
 }
 
@@ -17,7 +17,7 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
 
   const {
     addColumnModalOpen,
-    handleAddColumnModalClose,
+    toggleAddColumnModal,
   } = props
 
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
   return (
     <Dialog
       open={addColumnModalOpen}
-      onClose={handleAddColumnModalClose} 
+      onClose={toggleAddColumnModal} 
     >
       <DialogTitle>Add a Column</DialogTitle>
       <DialogContent>
@@ -45,7 +45,7 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleAddColumnModalClose} color='error' variant='contained'>Cancel</Button>
+        <Button onClick={toggleAddColumnModal} color='error' variant='contained'>Cancel</Button>
         <Button onClick={onAddColumn} color='success' variant='contained'>Create</Button>
       </DialogActions>
     </Dialog>

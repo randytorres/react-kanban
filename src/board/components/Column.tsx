@@ -14,14 +14,15 @@ import { ICard, IColumn } from '../../global/interfaces';
 export interface ColumnProps extends IColumn {
   cards: ICard[]
   onAddCard: (cardName: string, description: string, columnId: string) => void
-  handleEditColumnMenuOpen: any
+  handleColumnMenuOpen: any
+  handleCardMenuOpen: any
 }
 
 export const Column: React.FC<ColumnProps> = (props) => {
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
-  const { id, index, name, cards, handleEditColumnMenuOpen } = props
+  const { id, index, name, cards, handleColumnMenuOpen, handleCardMenuOpen } = props
 
   const onOpenAddCardDisplay = () =>{
     setAddCardDisplayOpen(true)
@@ -38,13 +39,13 @@ export const Column: React.FC<ColumnProps> = (props) => {
     setDescription('')
   }
 
-  const onEditColumnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    handleEditColumnMenuOpen(e, id)
+  const onColumnSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    handleColumnMenuOpen(e, id)
   }
 
   const cardsWithColumnData = cards
     .filter(card => card.columnId === id)
-    .map((card, index) => <Card key={card.id} {...card}  />)
+    .map(card => <Card key={card.id} {...card} handleCardMenuOpen={handleCardMenuOpen}  />)
 
   return (
     <Draggable draggableId={id} index={index} key={id}>
@@ -60,7 +61,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
               <IconButton onClick={onOpenAddCardDisplay} disableRipple>
                 <AddIcon />
               </IconButton>
-              <IconButton onClick={onEditColumnClick} disableRipple>
+              <IconButton onClick={onColumnSettingsClick} disableRipple>
                 <FontAwesomeIcon icon={faEllipsis} />
               </IconButton>
             </IconContainer>

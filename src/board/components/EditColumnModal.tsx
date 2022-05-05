@@ -10,7 +10,7 @@ import { IColumn } from '../../global/interfaces';
 
 interface EditColumnModalProps {
   editColumnModalOpen: boolean 
-  handleEditColumnModalClose: () => void
+  toggleEditColumnModal: () => void
   onEditColumnSave: any
   column: IColumn
 }
@@ -20,18 +20,21 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
 
   const {
     editColumnModalOpen,
-    handleEditColumnModalClose,
-    onEditColumnSave 
+    toggleEditColumnModal,
   } = props
 
   const onEditColumnName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditColumnText(e.target.value)
   }
 
+  const onEditColumnSave = () => {
+    props.onEditColumnSave(editColumnText)
+  }
+
   return (
     <Dialog
       open={editColumnModalOpen}
-      onClose={handleEditColumnModalClose} 
+      onClose={toggleEditColumnModal} 
     >
       <DialogTitle>Edit Column</DialogTitle>
       <DialogContent>
@@ -46,7 +49,7 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleEditColumnModalClose} color='error' variant='contained'>Cancel</Button>
+        <Button onClick={toggleEditColumnModal} color='error' variant='contained'>Cancel</Button>
         <Button onClick={onEditColumnSave} color='success' variant='contained'>Update Column</Button>
       </DialogActions>
     </Dialog>
