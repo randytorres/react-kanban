@@ -9,20 +9,21 @@ import Button from '@mui/material/Button';
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { Card } from './Card';
-import { ICard, IColumn } from '../../global/interfaces';
+import { CardStatus, ICard, IColumn } from '../../global/interfaces';
 
 export interface ColumnProps extends IColumn {
   cards: ICard[]
   onAddCard: (cardName: string, description: string, columnId: string) => void
   handleColumnMenuOpen: any
   handleCardMenuOpen: any
+  handleCardStatusChange: (cardId: string, status: CardStatus) => void
 }
 
 export const Column: React.FC<ColumnProps> = (props) => {
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
-  const { id, index, name, cards, handleColumnMenuOpen, handleCardMenuOpen } = props
+  const { id, index, name, cards, handleColumnMenuOpen, handleCardMenuOpen, handleCardStatusChange } = props
 
   const onOpenAddCardDisplay = () =>{
     setAddCardDisplayOpen(true)
@@ -45,7 +46,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
 
   const cardsWithColumnData = cards
     .filter(card => card.columnId === id)
-    .map(card => <Card key={card.id} {...card} handleCardMenuOpen={handleCardMenuOpen}  />)
+    .map(card => <Card key={card.id} {...card} handleCardMenuOpen={handleCardMenuOpen} handleCardStatusChange={handleCardStatusChange}  />)
 
   return (
     <Draggable draggableId={id} index={index} key={id}>

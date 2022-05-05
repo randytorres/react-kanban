@@ -11,7 +11,12 @@ export interface ICard {
   name: string
   description: string
   createdAt: Date
-  status: string 
+  status: CardStatus
   order: number
   index: number
+}
+
+export enum CardStatus {
+  'Open' = 'OPEN',
+  'Closed' = 'CLOSED'
 }

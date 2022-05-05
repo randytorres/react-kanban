@@ -1,32 +1,17 @@
 import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import styled from '@emotion/styled'
+import AddIcon from '@mui/icons-material/Add';
 
 import { Column } from './Column'
-import { ICard, IColumn } from '../../global/interfaces';
+import { DeleteColumnModal } from './DeleteColumnModal';
 import { EditColumnModal } from './EditColumnModal';
 import { AddColumnModal } from './AddColumnModal';
 import { ColumnMenu } from './ColumnMenu';
-
-// TODO: fix eslint error
-import styled from '@emotion/styled'
-import AddIcon from '@mui/icons-material/Add';import { DeleteColumnModal } from './DeleteColumnModal';
+import { CardStatus, ICard, IColumn } from '../../global/interfaces';
 import { CardMenu } from './CardMenu';
 import { EditCardModal } from './EditCardModal';
-;
-
-// TODO
-// User can identify / switch status of card
-// ----
-// DONE
-// User can modify card details
-// User can delete empty column
-// User can modify column name
-// User can add card to column with name and description
-// User can add column with name
-// User can move columns by drag & drop
-// User can move / order card by drag & drop
-// User can archive card
 
 export const Board: React.FC = () => {
   const [columns, setColumns] = useState<IColumn[]>([])
@@ -126,7 +111,7 @@ export const Board: React.FC = () => {
       name: cardName,
       description: description,
       createdAt: new Date(),
-      status: '',
+      status: CardStatus.Open,
       order: newIndex,
       index: newIndex,
     }
@@ -189,6 +174,20 @@ export const Board: React.FC = () => {
     }
 
     handleCardMenuClose()
+  }
+
+  const handleCardStatusChange = (cardId: string, status: CardStatus) => {
+    const newCards = Array.from(cards)
+
+    const cardToEditIndex = newCards.findIndex(card => card.id === cardId)
+
+    if (cardToEditIndex >= 0) {
+      newCards[cardToEditIndex] = {
+        ...newCards[cardToEditIndex],
+        status,
+      }
+      setCards(newCards)
+    }
   }
 
   /**
@@ -273,6 +272,7 @@ export const Board: React.FC = () => {
                 cards={cards}
                 handleColumnMenuOpen={handleColumnMenuOpen}
                 handleCardMenuOpen={handleCardMenuOpen}
+                handleCardStatusChange={handleCardStatusChange}
               />
             ))}
             <AddColumn onClick={toggleAddColumnModal}>
