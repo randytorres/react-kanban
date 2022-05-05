@@ -6,10 +6,11 @@ interface CardMenuProps {
   cardAnchorEl: any 
   handleCardMenuClose: () => void
   toggleEditCardModal: () => void
+  onArchiveCard: () => void
 }
 
 export const CardMenu: React.FC<CardMenuProps> = (props) => {
-  const { cardAnchorEl, handleCardMenuClose, toggleEditCardModal } = props
+  const { cardAnchorEl, handleCardMenuClose, toggleEditCardModal, onArchiveCard } = props
   const cardMenuOpen = Boolean(cardAnchorEl);
 
   return (
@@ -23,7 +24,7 @@ export const CardMenu: React.FC<CardMenuProps> = (props) => {
       }}
     >
       <MenuItem onClick={toggleEditCardModal}>Edit</MenuItem>
-      <MenuItem onClick={() => {}}>Archive</MenuItem>
+      <MenuItem onClick={onArchiveCard}>Archive</MenuItem>
     </Menu>
   )
 }

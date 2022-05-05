@@ -17,7 +17,6 @@ import { EditCardModal } from './EditCardModal';
 
 // TODO
 // User can identify / switch status of card
-// User can archive card
 // ----
 // DONE
 // User can modify card details
@@ -27,10 +26,12 @@ import { EditCardModal } from './EditCardModal';
 // User can add column with name
 // User can move columns by drag & drop
 // User can move / order card by drag & drop
+// User can archive card
 
 export const Board: React.FC = () => {
   const [columns, setColumns] = useState<IColumn[]>([])
   const [cards, setCards] = useState<ICard[]>([])
+  const [archivedCards, setArchivedCards] = useState<ICard[]>([])
   const [addColumnModalOpen, setAddColumnModalOpen] = useState<boolean>(false)
   const [editColumnModalOpen, setEditColumnModalOpen] = useState<boolean>(false)
   const [editColumn, setEditColumn] = React.useState<IColumn>();
@@ -39,7 +40,6 @@ export const Board: React.FC = () => {
   const [cardAnchorEl, setCardAnchorEl] = React.useState<any>(null);
   const [cardToEdit, setCardToEdit] = React.useState<ICard>();
   const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
-
 
   const toggleAddColumnModal = () => {
     setAddColumnModalOpen(!addColumnModalOpen)
@@ -171,6 +171,26 @@ export const Board: React.FC = () => {
     handleCardMenuClose()
   }
 
+  const onArchiveCard = () => {
+    console.info('Archiving', cardToEdit)
+    const newCards = Array.from(cards)
+
+    if (!cardToEdit) return
+
+    const cardToArchiveIndex = newCards.findIndex(card => card.id === cardToEdit?.id)
+
+    if (cardToArchiveIndex >= 0) {
+      newCards.splice(cardToArchiveIndex, 1)
+      setCards(newCards.map((card, index) => ({ ...card, index, order: index })))
+      setArchivedCards([
+        ...archivedCards,
+        cardToEdit,
+      ])
+    }
+
+    handleCardMenuClose()
+  }
+
   /**
    * Is called with columns and cards are moved.
    */
@@ -294,6 +314,7 @@ export const Board: React.FC = () => {
         cardAnchorEl={cardAnchorEl}
         handleCardMenuClose={handleCardMenuClose}
         toggleEditCardModal={toggleEditCardModal}
+        onArchiveCard={onArchiveCard}
       />
       {cardToEdit && (
         <EditCardModal
