@@ -6,22 +6,22 @@ import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton'
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-import { v4 as uuidv4 } from 'uuid'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 
-import { Card, CardProps } from './Card';
+import { Card } from './Card';
 import { ICard, IColumn } from '../../global/interfaces';
 
 export interface ColumnProps extends IColumn {
   cards: ICard[]
   onAddCard: (cardName: string, description: string, columnId: string) => void
+  handleEditColumnMenuOpen: any
 }
 
 export const Column: React.FC<ColumnProps> = (props) => {
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
-  const { id, index, name, cards } = props
+  const { id, index, name, cards, handleEditColumnMenuOpen } = props
 
   const onOpenAddCardDisplay = () =>{
     setAddCardDisplayOpen(true)
@@ -36,6 +36,10 @@ export const Column: React.FC<ColumnProps> = (props) => {
 
     setCardName('')
     setDescription('')
+  }
+
+  const onEditColumnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    handleEditColumnMenuOpen(e, id)
   }
 
   const cardsWithColumnData = cards
@@ -56,7 +60,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
               <IconButton onClick={onOpenAddCardDisplay} disableRipple>
                 <AddIcon />
               </IconButton>
-              <IconButton onClick={() => {}} disableRipple>
+              <IconButton onClick={onEditColumnClick} disableRipple>
                 <FontAwesomeIcon icon={faEllipsis} />
               </IconButton>
             </IconContainer>

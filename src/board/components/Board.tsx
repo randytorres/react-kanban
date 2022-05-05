@@ -1,38 +1,90 @@
-import React, { useEffect, useRef, useState } from 'react'
-import styled from '@emotion/styled'
-import AddIcon from '@mui/icons-material/Add';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 
 import { Column } from './Column'
 import { ICard, IColumn } from '../../global/interfaces';
+import { EditColumnModal } from './EditColumnModal';
+import { AddColumnModal } from './AddColumnModal';
+import { ColumnMenu } from './ColumnMenu';
+
+// TODO: fix eslint error
+import styled from '@emotion/styled'
+import AddIcon from '@mui/icons-material/Add';import { DeleteColumnModal } from './DeleteColumnModal';
+;
+
+// TODO
+// User can modify card details
+// User can identify / switch status of card
+// User can archive card
+// ----
+// DONE
+// User can delete empty column
+// User can modify column name
+// User can add card to column with name and description
+// User can add column with name
+// User can move columns by drag & drop
+// User can move / order card by drag & drop
 
 export const Board: React.FC = () => {
   const [columns, setColumns] = useState<IColumn[]>([])
   const [cards, setCards] = useState<ICard[]>([])
-  const [modalOpen, setModalOpen] = useState(false)
-  const [newColumnName, setNewColumnName] = useState('')
+  const [addColumnModalOpen, setAddColumnModalOpen] = useState<boolean>(false)
+  const [editColumnModalOpen, setEditColumnModalOpen] = useState<boolean>(false)
+  const [editColumn, setEditColumn] = React.useState<IColumn>();
+  const [deleteColumnModalOpen, setDeleteColumnModalOpen] = useState<boolean>(false)
+  const [anchorEl, setAnchorEl] = React.useState<any>(null);
 
-  const handleModalOpen = () => {
-    setModalOpen(true)
+  const handleAddColumnModalOpen = () => {
+    setAddColumnModalOpen(true)
   }
 
-  const handleModalClose = () => {
-    setModalOpen(false)
+  const handleAddColumnModalClose = () => {
+    setAddColumnModalOpen(false)
   }
 
-  const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewColumnName(e.target.value)
+  const handleEditColumnModalOpen = () => {
+    setEditColumnModalOpen(true)
   }
 
-  const onAddColumn = () => {
+  const handleEditColumnModalClose = () => {
+    setEditColumnModalOpen(false)
+  }
+
+  const handleEditColumnMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleEditColumnMenuOpen = (event: React.ChangeEvent<HTMLButtonElement>, columnId: string) => {
+    setAnchorEl(event.currentTarget);
+
+    const columnToEdit = columns.find(col => col.id === columnId)
+    setEditColumn(columnToEdit)
+  };
+
+  const toggleDeleteColumnModal = (modalOpen?: boolean) => {
+    let state = !deleteColumnModalOpen
+    if (modalOpen) {
+      state = modalOpen
+    }
+
+    setDeleteColumnModalOpen(state)
+    handleEditColumnMenuClose()
+  } 
+
+  const onDeleteColumn = () => {
+    const newColumns = Array.from(columns)
+
+    const columnToDeleteIndex = newColumns.findIndex(col => col.id === editColumn?.id)
+
+    if (columnToDeleteIndex) {
+      newColumns.splice(columnToDeleteIndex, 1)
+      setColumns(newColumns.map((col, index) => ({ ...col, index, order: index })))
+      toggleDeleteColumnModal(false)
+    }
+  }
+
+  const onAddColumn = (newColumnName: string) => {
     const newIndex = columns.length
     const newColumn = {
       id: uuidv4(),
@@ -47,7 +99,7 @@ export const Board: React.FC = () => {
     ]
     setColumns(newColumns)
 
-    handleModalClose()
+    handleAddColumnModalClose()
   }
 
   const onAddCard = (cardName: string, description: string, columnId: string) => {
@@ -71,10 +123,26 @@ export const Board: React.FC = () => {
     setCards(newCards)
   }
 
+  const onEditColumnSave = (editColumnText: string) => {
+    if (!editColumn) return
+
+    const editedColumns = Array.from(columns)
+    const columnToEditIndex = columns.findIndex(col => col.id === editColumn?.id)
+    editedColumns[columnToEditIndex] = {
+      ...editColumn,
+      name: editColumnText
+    }
+
+    setColumns(editedColumns)
+
+    handleEditColumnModalClose()
+    handleEditColumnMenuClose()
+  }
+
   /**
    * Is called with columns and cards are moved.
    */
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result;
     if (!destination) { return }
 
@@ -151,35 +219,42 @@ export const Board: React.FC = () => {
                 index={index}
                 onAddCard={onAddCard}
                 cards={cards}
+                handleEditColumnMenuOpen={handleEditColumnMenuOpen}
               />
             ))}
-            <AddColumn onClick={handleModalOpen}>
+            <AddColumn onClick={handleAddColumnModalOpen}>
               <AddIcon />
               Add Column
             </AddColumn>
-            <Dialog
-              open={modalOpen}
-              onClose={handleModalClose} 
-            >
-              <DialogTitle>Add a Column</DialogTitle>
-              <DialogContent>
-                <TextField
-                  autoFocus
-                  margin='dense'
-                  label='Column Name'
-                  fullWidth
-                  variant='standard'
-                  onChange={onChangeText}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleModalClose} color='error' variant='contained'>Cancel</Button>
-                <Button onClick={onAddColumn} color='success' variant='contained'>Create</Button>
-              </DialogActions>
-            </Dialog>
+            <AddColumnModal
+              addColumnModalOpen={addColumnModalOpen}
+              handleAddColumnModalClose={handleAddColumnModalClose}
+              onAddColumn={onAddColumn}
+            /> 
           </BoardContainer>
         )}
       </Droppable>
+      <ColumnMenu
+        anchorEl={anchorEl}
+        handleEditColumnMenuClose={handleEditColumnMenuClose}
+        handleEditColumnModalOpen={handleEditColumnModalOpen}
+        toggleDeleteColumnModal={toggleDeleteColumnModal}
+      />
+      {editColumn && (
+        <>
+          <EditColumnModal
+            editColumnModalOpen={editColumnModalOpen}
+            handleEditColumnModalClose={handleEditColumnModalOpen}
+            onEditColumnSave={onEditColumnSave}
+            column={editColumn}
+          />
+          <DeleteColumnModal
+            deleteColumnModalOpen={deleteColumnModalOpen}
+            toggleDeleteColumnModal={toggleDeleteColumnModal}
+            onDeleteColumn={onDeleteColumn}
+          />
+        </>
+      )}
     </DragDropContext>
   )
 }

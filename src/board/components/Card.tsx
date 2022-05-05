@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
 import MaterialCard from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -8,9 +8,7 @@ import { Draggable } from 'react-beautiful-dnd'
 
 import { ICard } from '../../global/interfaces';
 
-export interface CardProps extends ICard {
-
-}
+export interface CardProps extends ICard {}
 
 export const Card: React.FC<CardProps> = (props) => {
   const { id, index, name, description } = props
