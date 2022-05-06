@@ -12,8 +12,13 @@ import { ColumnMenu } from './ColumnMenu';
 import { CardStatus, ICard, IColumn } from '../../global/interfaces';
 import { CardMenu } from './CardMenu';
 import { EditCardModal } from './EditCardModal';
+import { Theme } from '@mui/material/styles';
 
-export const Board: React.FC = () => {
+interface BoardProps {
+  theme: Theme
+}
+
+export const Board: React.FC<BoardProps> = (props) => {
   const [columns, setColumns] = useState<IColumn[]>([])
   const [cards, setCards] = useState<ICard[]>([])
   const [archivedCards, setArchivedCards] = useState<ICard[]>([])
@@ -25,6 +30,8 @@ export const Board: React.FC = () => {
   const [cardAnchorEl, setCardAnchorEl] = React.useState<any>(null);
   const [cardToEdit, setCardToEdit] = React.useState<ICard>();
   const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
+
+  const { theme } = props
 
   const toggleAddColumnModal = () => {
     setAddColumnModalOpen(!addColumnModalOpen)
@@ -261,31 +268,36 @@ export const Board: React.FC = () => {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId='all-columns' direction='horizontal' type='column'>
         {(provided) => (
-          <BoardContainer {...provided.droppableProps} ref={provided.innerRef}>
-            {columns.map((col, index) => (
-              <Column
-                {...col}
-                key={col.id}
-                index={index}
-                onAddCard={onAddCard}
-                cards={cards}
-                handleColumnMenuOpen={handleColumnMenuOpen}
-                handleCardMenuOpen={handleCardMenuOpen}
-                handleCardStatusChange={handleCardStatusChange}
-              />
-            ))}
-            <AddColumn onClick={toggleAddColumnModal}>
-              <AddIcon />
-              Add Column
-            </AddColumn>
-            <AddColumnModal
-              addColumnModalOpen={addColumnModalOpen}
-              toggleAddColumnModal={toggleAddColumnModal}
-              onAddColumn={onAddColumn}
-            /> 
-          </BoardContainer>
+          <div {...provided.droppableProps} ref={provided.innerRef} style={{ height: '100%' }}>
+            <BoardContainer>
+              {columns.map((col, index) => (
+                <Column
+                  {...col}
+                  key={col.id}
+                  index={index}
+                  onAddCard={onAddCard}
+                  cards={cards}
+                  handleColumnMenuOpen={handleColumnMenuOpen}
+                  handleCardMenuOpen={handleCardMenuOpen}
+                  handleCardStatusChange={handleCardStatusChange}
+                />
+              ))}
+              {provided.placeholder}
+              <AddColumn onClick={toggleAddColumnModal}>
+                <AddIcon style={{ color: theme.palette.text.primary }} />
+                <AddColumnText theme={theme}>Add Column</AddColumnText>
+              </AddColumn>
+              <AddColumnModal
+                addColumnModalOpen={addColumnModalOpen}
+                toggleAddColumnModal={toggleAddColumnModal}
+                onAddColumn={onAddColumn}
+              /> 
+            </BoardContainer>
+          
+          </div>
         )}
       </Droppable>
+      
 
       {/* Column Actions */}
       <ColumnMenu
@@ -332,11 +344,10 @@ export const Board: React.FC = () => {
 
 const BoardContainer = styled.div({
   height: '100%',
-  padding: 20,
+  paddingTop: 10,
   flexDirection: 'row',
   display: 'flex',
   width: 'fit-content',
-  overflowX: 'scroll',
 })
 
 const AddColumn = styled.button({
@@ -350,4 +361,11 @@ const AddColumn = styled.button({
   borderWidth: 1,
   borderStyle: 'dotted',
   borderRadius: 5,
+  backgroundColor: 'transparent',
 })
+
+const AddColumnText = styled.p(({ theme }: { theme: Theme }) => ({
+  color: theme.palette.text.primary,
+  margin: 0,
+  paddingLeft: 5,
+}))

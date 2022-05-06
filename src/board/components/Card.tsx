@@ -1,18 +1,19 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import MaterialCard from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import { Draggable } from 'react-beautiful-dnd'
+import MaterialCard from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
-import { Draggable } from 'react-beautiful-dnd'
+import { useTheme, Theme } from '@mui/material/styles'
 
-import { CardStatus, ICard } from '../../global/interfaces';
-import { CardActions } from '@mui/material';
+import { CardStatus, ICard } from '../../global/interfaces'
+import { CardActions } from '@mui/material'
 
 export interface CardProps extends ICard {
   handleCardMenuOpen: any
@@ -20,6 +21,7 @@ export interface CardProps extends ICard {
 }
 
 export const Card: React.FC<CardProps> = (props) => {
+  const theme = useTheme()
   const { id, index, name, description, handleCardMenuOpen, status } = props
 
   const onCardSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -38,6 +40,7 @@ export const Card: React.FC<CardProps> = (props) => {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           variant='outlined'
+          theme={theme}
         >
           <CardHeader
             title={name}
@@ -73,9 +76,10 @@ export const Card: React.FC<CardProps> = (props) => {
   )
 }
 
-const CardContainer = styled(MaterialCard)({
+const CardContainer = styled(MaterialCard)<any>(({ theme }: { theme: Theme }) => ({
   marginTop: 10,
-})
+  backgroundColor: theme.palette.action.selected,
+}))
 
 const ToggleButtonContainer = styled.div({
   display: 'flex',

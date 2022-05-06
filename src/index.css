@@ -4,6 +4,12 @@
 
 html, body, #root {
   height: 100%;
+  width: 100%;
+}
+
+.fit-content {
+  height: fit-content;
+  width: fit-content;
 }
 
 body {

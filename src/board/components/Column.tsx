@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
+import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton'
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-import { Droppable, Draggable } from 'react-beautiful-dnd'
+import { useTheme, Theme } from '@mui/material/styles';
 
 import { Card } from './Card';
 import { CardStatus, ICard, IColumn } from '../../global/interfaces';
@@ -20,6 +21,7 @@ export interface ColumnProps extends IColumn {
 }
 
 export const Column: React.FC<ColumnProps> = (props) => {
+  const theme = useTheme()
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
@@ -52,11 +54,12 @@ export const Column: React.FC<ColumnProps> = (props) => {
     <Draggable draggableId={id} index={index} key={id}>
       {(provided) => (
         <ColumnContainer
+          theme={theme}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <HeaderContainer>
+          <HeaderContainer theme={theme}>
             <Title>{name}</Title>
             <IconContainer>
               <IconButton onClick={onOpenAddCardDisplay} disableRipple>
@@ -109,13 +112,14 @@ export const Column: React.FC<ColumnProps> = (props) => {
               </AddCardContainer>
             )}
           
-            <Droppable droppableId={id} type='task'>
+            <Droppable droppableId={id} type='card'>
               {(provided) => (
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
                   {cardsWithColumnData}
+                  {provided.placeholder}
                 </div>
               )}
             </Droppable>
@@ -126,22 +130,22 @@ export const Column: React.FC<ColumnProps> = (props) => {
   )
 }
 
-const ColumnContainer = styled.div({
+const ColumnContainer = styled.div(({ theme }: { theme: Theme }) => ({
   width: 315,
   padding: '10px 0',
-  border: '1px solid #000',
+  border: `1px solid ${theme.palette.action.disabled}`,
   borderRadius: 5,
   marginRight: 16,
-  overflowY: 'scroll',
-})
+  overflow: 'scroll',
+}))
 
-const HeaderContainer = styled.div({
+const HeaderContainer = styled.div(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  borderBottom: '1px solid #000',
+  borderBottom: `1px solid ${theme.palette.action.disabled}`,
   padding: '0 10px 10px',
-})
+}))
 
 const IconContainer = styled.div({
   display: 'flex',
