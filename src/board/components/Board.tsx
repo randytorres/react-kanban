@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import styled from '@emotion/styled'
@@ -32,6 +32,21 @@ export const Board: React.FC<BoardProps> = (props) => {
   const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
 
   const { theme } = props
+
+  const saveColumns = (columns: IColumn[]) => {
+    window.localStorage.setItem('columns', JSON.stringify(columns))
+    setColumns(columns)
+  }
+
+  const saveCards = (cards: ICard[]) => {
+    window.localStorage.setItem('cards', JSON.stringify(cards))
+    setCards(cards)
+  }
+
+  const saveArchivedCards = (cards: ICard[]) => {
+    window.localStorage.setItem('archived_cards', JSON.stringify(cards))
+    setArchivedCards(cards)
+  }
 
   const toggleAddColumnModal = () => {
     setAddColumnModalOpen(!addColumnModalOpen)
@@ -84,9 +99,9 @@ export const Board: React.FC<BoardProps> = (props) => {
 
     const columnToDeleteIndex = newColumns.findIndex(col => col.id === editColumn?.id)
 
-    if (columnToDeleteIndex) {
+    if (columnToDeleteIndex >= 0) {
       newColumns.splice(columnToDeleteIndex, 1)
-      setColumns(newColumns.map((col, index) => ({ ...col, index, order: index })))
+      saveColumns(newColumns.map((col, index) => ({ ...col, index, order: index })))
       toggleDeleteColumnModal()
     }
   }
@@ -104,7 +119,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       ...columns,
       newColumn,
     ]
-    setColumns(newColumns)
+    saveColumns(newColumns)
 
     toggleAddColumnModal()
   }
@@ -127,7 +142,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       newCard,
     ]
 
-    setCards(newCards)
+    saveCards(newCards)
   }
 
   const onEditColumnSave = (editColumnText: string) => {
@@ -140,7 +155,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       name: editColumnText
     }
 
-    setColumns(editedColumns)
+    saveColumns(editedColumns)
 
     toggleEditColumnModal()
     handleColumnMenuClose()
@@ -157,7 +172,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       description,
     }
 
-    setCards(editedCards)
+    saveCards(editedCards)
 
     toggleEditCardModal()
     handleCardMenuClose()
@@ -172,8 +187,8 @@ export const Board: React.FC<BoardProps> = (props) => {
 
     if (cardToArchiveIndex >= 0) {
       newCards.splice(cardToArchiveIndex, 1)
-      setCards(newCards.map((card, index) => ({ ...card, index, order: index })))
-      setArchivedCards([
+      saveCards(newCards.map((card, index) => ({ ...card, index, order: index })))
+      saveArchivedCards([
         ...archivedCards,
         cardToEdit,
       ])
@@ -192,7 +207,7 @@ export const Board: React.FC<BoardProps> = (props) => {
         ...newCards[cardToEditIndex],
         status,
       }
-      setCards(newCards)
+      saveCards(newCards)
     }
   }
 
@@ -217,7 +232,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       reOrderedColumns.splice(destination.index, 0, columnToMove);
       // TODO: Do we need columns prop?
       reOrderedColumns = reOrderedColumns.map((col, index) => ({ ...col, order: index, index: index }))
-      setColumns(reOrderedColumns)
+      saveColumns(reOrderedColumns)
       return;
     }
 
@@ -237,7 +252,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       cardsInDroppedColumn.splice(destination.index, 0, cardToMove);
 
       cardsInDroppedColumn = cardsInDroppedColumn.map((card, index) => ({ ...card, order: index, index: index }))
-      setCards([
+      saveCards([
         ...cards.filter(card => card.columnId !== startColumn.id),
         ...cardsInDroppedColumn
       ])
@@ -257,12 +272,28 @@ export const Board: React.FC<BoardProps> = (props) => {
 
     const updatedCardInStartColumn = cardsInStartColumn.map((card, index) => ({ ...card, index, order: index }))
     const updatedCardInFinishColumn = cardsInFinishColumn.map((card, index) => ({ ...card, index, order: index }))
-    setCards([
+    saveCards([
       ...cards.filter(card => card.columnId !== startColumn?.id && card.columnId !== destination.droppableId),
       ...updatedCardInStartColumn,
       ...updatedCardInFinishColumn,
     ])
   }
+
+  useEffect(() => {
+    const savedColumns = window.localStorage.getItem('columns')
+    const savedCards = window.localStorage.getItem('cards')
+    const savedArchivedCards = window.localStorage.getItem('archived_cards')
+    
+    if (savedColumns) {
+      setColumns(JSON.parse(savedColumns))
+    }
+    if (savedCards) {
+      setCards(JSON.parse(savedCards))
+    }
+    if (savedArchivedCards) {
+      setArchivedCards(JSON.parse(savedArchivedCards))
+    }
+  }, [])
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -305,6 +336,7 @@ export const Board: React.FC<BoardProps> = (props) => {
         handleColumnMenuClose={handleColumnMenuClose}
         toggleEditColumnModal={toggleEditColumnModal}
         toggleDeleteColumnModal={toggleDeleteColumnModal}
+        canDeleteColumn={cards.length === 0}
       />
       {editColumn && (
         <>

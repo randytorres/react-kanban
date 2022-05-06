@@ -7,13 +7,13 @@ interface ColumnMenuProps {
   handleColumnMenuClose: () => void
   toggleEditColumnModal: () => void
   toggleDeleteColumnModal: () => void
+  canDeleteColumn: boolean
 }
 
 export const ColumnMenu: React.FC<ColumnMenuProps> = (props) => {
-  const { anchorEl, handleColumnMenuClose, toggleEditColumnModal, toggleDeleteColumnModal } = props
+  const { anchorEl, canDeleteColumn, handleColumnMenuClose, toggleEditColumnModal, toggleDeleteColumnModal } = props
   const columnMenuOpen = Boolean(anchorEl);
 
-  // TODO: add `canDeleteColumn` to props
   return (
     <Menu
       id='basic-menu'
@@ -25,7 +25,7 @@ export const ColumnMenu: React.FC<ColumnMenuProps> = (props) => {
       }}
     >
       <MenuItem onClick={toggleEditColumnModal}>Edit</MenuItem>
-      <MenuItem onClick={toggleDeleteColumnModal}>Delete</MenuItem>
+      <MenuItem onClick={toggleDeleteColumnModal} disabled={!canDeleteColumn}>Delete</MenuItem>
     </Menu>
   )
 }
