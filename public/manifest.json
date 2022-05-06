@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "React Kanban",
+  "name": "A Simple Kanban Board Built in Reactjs",
   "icons": [
     {
       "src": "favicon.ico",
