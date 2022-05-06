@@ -53,7 +53,6 @@ export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
           value={name}
         />
         <TextField
-          autoFocus
           margin='dense'
           label='Description'
           fullWidth

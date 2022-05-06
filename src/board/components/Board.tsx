@@ -12,13 +12,10 @@ import { ColumnMenu } from './ColumnMenu';
 import { CardStatus, ICard, IColumn } from '../../global/interfaces';
 import { CardMenu } from './CardMenu';
 import { EditCardModal } from './EditCardModal';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 
-interface BoardProps {
-  theme: Theme
-}
-
-export const Board: React.FC<BoardProps> = (props) => {
+export const Board: React.FC = () => {
+  const theme = useTheme()
   const [columns, setColumns] = useState<IColumn[]>([])
   const [cards, setCards] = useState<ICard[]>([])
   const [archivedCards, setArchivedCards] = useState<ICard[]>([])
@@ -30,8 +27,6 @@ export const Board: React.FC<BoardProps> = (props) => {
   const [cardAnchorEl, setCardAnchorEl] = React.useState<any>(null);
   const [cardToEdit, setCardToEdit] = React.useState<ICard>();
   const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
-
-  const { theme } = props
 
   const saveColumns = (columns: IColumn[]) => {
     window.localStorage.setItem('columns', JSON.stringify(columns))

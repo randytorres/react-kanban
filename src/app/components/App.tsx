@@ -6,8 +6,8 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useTheme } from '@mui/material/styles';
 
-import { Board } from '../../board';
 import { ColorModeContext } from '../utils/ColorModeContext';
+import { Router } from './Router';
 
 export const App: React.FC = () => {
   const theme = useTheme();
@@ -30,7 +30,7 @@ export const App: React.FC = () => {
             {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </Header>
-        <Board theme={theme} />
+        <Router />
    </Box>
   ) 
 }

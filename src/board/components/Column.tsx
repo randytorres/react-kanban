@@ -84,7 +84,6 @@ export const Column: React.FC<ColumnProps> = (props) => {
                   value={cardName}
                 />
                 <TextField
-                  autoFocus
                   margin='dense'
                   label='Description'
                   fullWidth
@@ -117,8 +116,14 @@ export const Column: React.FC<ColumnProps> = (props) => {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
+                  style={{ height: '100%' }}
                 >
-                  {cardsWithColumnData}
+                  {cardsWithColumnData.length > 0
+                    ? cardsWithColumnData
+                    : addCardDisplayOpen
+                      ? null
+                      : <HelperText>Click the <AddIcon style={{ margin: '0 5px' }} /> icon above to add an item!</HelperText>
+                  }
                   {provided.placeholder}
                 </div>
               )}
@@ -158,6 +163,13 @@ const Title = styled.h3({
 
 const Content = styled.div({
   padding: 10,
+  height: '100%',
+})
+
+const HelperText = styled.p({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 })
 
 const AddButton = styled(Button)({
