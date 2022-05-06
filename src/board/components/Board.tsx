@@ -14,6 +14,19 @@ import { CardMenu } from './CardMenu';
 import { EditCardModal } from './EditCardModal';
 import { Theme, useTheme } from '@mui/material/styles';
 
+// Advanced features
+  // Test codes
+  // Graceful error handling
+// Structure
+  // More fields such as author, labels, assignee
+  // i18n feature
+// Performance
+  // Code splitting and lazy loading
+// Design
+  // RWD(Responsive Web Design) for desktop/mobile
+// UX
+  // Input Validation
+
 export const Board: React.FC = () => {
   const theme = useTheme()
   const [columns, setColumns] = useState<IColumn[]>([])
