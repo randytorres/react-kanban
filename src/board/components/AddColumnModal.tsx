@@ -16,6 +16,7 @@ interface AddColumnModalProps {
 export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
   const { t } = useTranslation()
   const [newColumnName, setNewColumnName] = useState<string>('')
+  const [errorText, setErrorText] = useState<string>('')
 
   const {
     addColumnModalOpen,
@@ -24,9 +25,16 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
 
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewColumnName(e.target.value)
+    if (errorText) {
+      setErrorText('')
+    }
   }
 
   const onAddColumn = () => {
+    if (!newColumnName) {
+      setErrorText('Name is required')
+      return
+    }
     props.onAddColumn(newColumnName)
   }
 
@@ -39,6 +47,8 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
       <DialogContent>
         <TextField
           autoFocus
+          error={!!errorText}
+          helperText={errorText}
           margin='dense'
           label={t('column.addColumn.nameInputLabel')}
           fullWidth

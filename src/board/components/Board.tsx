@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import styled from '@emotion/styled'
 import AddIcon from '@mui/icons-material/Add'
+import { Theme, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 
 import { Column } from './Column'
@@ -10,34 +11,37 @@ import { DeleteColumnModal } from './DeleteColumnModal'
 import { EditColumnModal } from './EditColumnModal'
 import { AddColumnModal } from './AddColumnModal'
 import { ColumnMenu } from './ColumnMenu'
-import { CardStatus, ICard, IColumn } from '../../global/interfaces'
 import { CardMenu } from './CardMenu'
 import { EditCardModal } from './EditCardModal'
-import { Theme, useTheme } from '@mui/material/styles'
+import { CardStatus, ICard, IColumn } from '../../global/interfaces'
 
 // TODO:
   // Graceful error handling
   // Refactor
-  // Input Validation
+    // Create function to update array order
   // Responsive design
-  // Test codes
+  // Unit Tests
   // Add Comments
   // Styling issues
 
 export const Board: React.FC = () => {
   const theme = useTheme()
   const { t } = useTranslation()
+  // Items (columns, card, archivedCards)
   const [columns, setColumns] = useState<IColumn[]>([])
   const [cards, setCards] = useState<ICard[]>([])
   const [archivedCards, setArchivedCards] = useState<ICard[]>([])
+  // Modals
   const [addColumnModalOpen, setAddColumnModalOpen] = useState<boolean>(false)
   const [editColumnModalOpen, setEditColumnModalOpen] = useState<boolean>(false)
-  const [editColumn, setEditColumn] = React.useState<IColumn>()
   const [deleteColumnModalOpen, setDeleteColumnModalOpen] = useState<boolean>(false)
+  const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
+  // Cards/Columns to edit 
+  const [columnToEdit, setColumnToEdit] = React.useState<IColumn>()
+  const [cardToEdit, setCardToEdit] = React.useState<ICard>()
+  // Menu anchor elements
   const [columnAnchorEl, setColumnAnchorEl] = React.useState<Element | null>(null)
   const [cardAnchorEl, setCardAnchorEl] = React.useState<Element | null>(null)
-  const [cardToEdit, setCardToEdit] = React.useState<ICard>()
-  const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
 
   const saveColumns = (columns: IColumn[]) => {
     window.localStorage.setItem('columns', JSON.stringify(columns))
@@ -69,7 +73,7 @@ export const Board: React.FC = () => {
     setColumnAnchorEl(event.currentTarget)
 
     const columnToEdit = columns.find(col => col.id === columnId)
-    setEditColumn(columnToEdit)
+    setColumnToEdit(columnToEdit)
   }
 
   const handleColumnMenuClose = () => {
@@ -95,12 +99,12 @@ export const Board: React.FC = () => {
   }
 
   const onEditColumnSave = (editColumnText: string) => {
-    if (!editColumn) return
+    if (!columnToEdit) return
 
     const editedColumns = Array.from(columns)
-    const columnToEditIndex = columns.findIndex(col => col.id === editColumn?.id)
+    const columnToEditIndex = columns.findIndex(col => col.id === columnToEdit?.id)
     editedColumns[columnToEditIndex] = {
-      ...editColumn,
+      ...columnToEdit,
       name: editColumnText
     }
 
@@ -113,7 +117,7 @@ export const Board: React.FC = () => {
   const onDeleteColumn = () => {
     const newColumns = Array.from(columns)
 
-    const columnToDeleteIndex = newColumns.findIndex(col => col.id === editColumn?.id)
+    const columnToDeleteIndex = newColumns.findIndex(col => col.id === columnToEdit?.id)
 
     if (columnToDeleteIndex >= 0) {
       newColumns.splice(columnToDeleteIndex, 1)
@@ -237,7 +241,7 @@ export const Board: React.FC = () => {
       const columnToMove = columns.find(col => col.id === draggableId)
       if (!columnToMove) return
 
-      let reOrderedColumns = columns
+      let reOrderedColumns = Array.from(columns)
       reOrderedColumns.splice(source.index, 1)
       reOrderedColumns.splice(destination.index, 0, columnToMove)
       // TODO: Do we need columns prop?
@@ -289,6 +293,9 @@ export const Board: React.FC = () => {
     ])
   }
 
+  /**
+   * Restores data from localStorage
+   * */ 
   useEffect(() => {
     const savedColumns = window.localStorage.getItem('columns')
     const savedCards = window.localStorage.getItem('cards')
@@ -347,13 +354,13 @@ export const Board: React.FC = () => {
         toggleDeleteColumnModal={toggleDeleteColumnModal}
         cards={cards}
       />
-      {editColumn && (
+      {columnToEdit && (
         <>
           <EditColumnModal
             editColumnModalOpen={editColumnModalOpen}
             toggleEditColumnModal={toggleEditColumnModal}
             onEditColumnSave={onEditColumnSave}
-            column={editColumn}
+            column={columnToEdit}
           />
           <DeleteColumnModal
             deleteColumnModalOpen={deleteColumnModalOpen}

@@ -27,6 +27,8 @@ export const Column: React.FC<ColumnProps> = (props) => {
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
   const [cardName, setCardName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
+  const [nameErrorText, setNameErrorText] = useState<string>('')
+  const [descriptionErrorText, setDescriptionErrorText] = useState<string>('')
 
   const { id, index, name, cards, handleColumnMenuOpen, handleCardMenuOpen, handleCardStatusChange } = props
 
@@ -38,7 +40,30 @@ export const Column: React.FC<ColumnProps> = (props) => {
     setAddCardDisplayOpen(false)
   }
 
+  const onNameChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCardName(e.target.value)
+    if (nameErrorText) {
+      setNameErrorText('')
+    }
+  }
+
+  const onDescriptionChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(e.target.value)
+    if (descriptionErrorText) {
+      setDescriptionErrorText('')
+    }
+  }
+
   const onAddCard = () => {
+    if (!cardName) {
+      setNameErrorText('Name is required')
+      return
+    }
+    if (!description) {
+      setDescriptionErrorText('Description is required')
+      return
+    }
+    
     props.onAddCard(cardName, description, id)
 
     setCardName('')
@@ -77,22 +102,25 @@ export const Column: React.FC<ColumnProps> = (props) => {
             {addCardDisplayOpen && (
               <AddCardContainer>
                 <TextField
-                  multiline
                   autoFocus
+                  error={!!nameErrorText}
+                  helperText={nameErrorText}
                   margin='dense'
                   label={t('card.addCard.name')}
                   fullWidth
                   variant='standard'
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCardName(e.target.value)}
+                  onChange={onNameChangeText}
                   value={cardName}
                 />
                 <TextField
+                  error={!!descriptionErrorText}
+                  helperText={descriptionErrorText}
+                  multiline
                   margin='dense'
                   label={t('card.addCard.description')}
                   fullWidth
                   variant='standard'
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
-                  multiline
+                  onChange={onDescriptionChangeText}
                   value={description}
                 />
                 <ActionContainer>
