@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link as RouterLink} from 'react-router-dom';
+import React from 'react'
+import { Link as RouterLink} from 'react-router-dom'
 
 import styled from '@emotion/styled'
 
@@ -12,7 +12,7 @@ export const NotFound = () => (
       </Link>
     </RouterLink>
   </Container>
-);
+)
 
 const Container = styled.div({
   display: 'flex',

@@ -1,19 +1,20 @@
-import * as React from 'react';
-import { PaletteMode } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { App } from './App';
-import { ColorModeContext } from '../utils/ColorModeContext';
+import * as React from 'react'
+import { PaletteMode } from '@mui/material'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { App } from './App'
+import { ColorModeContext } from '../utils/ColorModeContext'
+import '../../i18n/config'
 
 export default function AppContainer() {
-  const [mode, setMode] = React.useState<PaletteMode>('dark');
+  const [mode, setMode] = React.useState<PaletteMode>('dark')
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))
       },
     }),
     [],
-  );
+  )
 
   const theme = React.useMemo(
     () =>
@@ -23,7 +24,7 @@ export default function AppContainer() {
         },
       }),
     [mode],
-  );
+  )
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -31,5 +32,5 @@ export default function AppContainer() {
         <App />
       </ThemeProvider>
     </ColorModeContext.Provider>
-  );
+  )
 }

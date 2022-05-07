@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 
-import { ICard, IColumn } from '../../global/interfaces';
+import { ICard, IColumn } from '../../global/interfaces'
 
 interface EditCardModalProps {
   editCardModalOpen: boolean 
@@ -16,8 +16,8 @@ interface EditCardModalProps {
 }
 
 export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
-  const [name, setName] = useState<string>(props.card.name);
-  const [description, setDescription] = useState<string>(props.card.description);
+  const [name, setName] = useState<string>(props.card.name)
+  const [description, setDescription] = useState<string>(props.card.description)
 
   const {
     editCardModalOpen,

@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import styled from '@emotion/styled'
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'
+import { useTranslation } from 'react-i18next'
 
 import { Column } from './Column'
-import { DeleteColumnModal } from './DeleteColumnModal';
-import { EditColumnModal } from './EditColumnModal';
-import { AddColumnModal } from './AddColumnModal';
-import { ColumnMenu } from './ColumnMenu';
-import { CardStatus, ICard, IColumn } from '../../global/interfaces';
-import { CardMenu } from './CardMenu';
-import { EditCardModal } from './EditCardModal';
-import { Theme, useTheme } from '@mui/material/styles';
+import { DeleteColumnModal } from './DeleteColumnModal'
+import { EditColumnModal } from './EditColumnModal'
+import { AddColumnModal } from './AddColumnModal'
+import { ColumnMenu } from './ColumnMenu'
+import { CardStatus, ICard, IColumn } from '../../global/interfaces'
+import { CardMenu } from './CardMenu'
+import { EditCardModal } from './EditCardModal'
+import { Theme, useTheme } from '@mui/material/styles'
 
 // Advanced features
   // Test codes
@@ -29,16 +30,17 @@ import { Theme, useTheme } from '@mui/material/styles';
 
 export const Board: React.FC = () => {
   const theme = useTheme()
+  const { t } = useTranslation()
   const [columns, setColumns] = useState<IColumn[]>([])
   const [cards, setCards] = useState<ICard[]>([])
   const [archivedCards, setArchivedCards] = useState<ICard[]>([])
   const [addColumnModalOpen, setAddColumnModalOpen] = useState<boolean>(false)
   const [editColumnModalOpen, setEditColumnModalOpen] = useState<boolean>(false)
-  const [editColumn, setEditColumn] = React.useState<IColumn>();
+  const [editColumn, setEditColumn] = React.useState<IColumn>()
   const [deleteColumnModalOpen, setDeleteColumnModalOpen] = useState<boolean>(false)
-  const [anchorEl, setAnchorEl] = React.useState<any>(null);
-  const [cardAnchorEl, setCardAnchorEl] = React.useState<any>(null);
-  const [cardToEdit, setCardToEdit] = React.useState<ICard>();
+  const [columnAnchorEl, setColumnAnchorEl] = React.useState<any>(null)
+  const [cardAnchorEl, setCardAnchorEl] = React.useState<any>(null)
+  const [cardToEdit, setCardToEdit] = React.useState<ICard>()
   const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
 
   const saveColumns = (columns: IColumn[]) => {
@@ -65,28 +67,28 @@ export const Board: React.FC = () => {
   }
 
   const handleColumnMenuClose = () => {
-    setAnchorEl(null)
+    setColumnAnchorEl(null)
   }
 
   const handleColumnMenuOpen = (event: React.ChangeEvent<HTMLButtonElement>, columnId: string) => {
-    setAnchorEl(event.currentTarget);
+    setColumnAnchorEl(event.currentTarget)
 
     const columnToEdit = columns.find(col => col.id === columnId)
     setEditColumn(columnToEdit)
-  };
+  }
 
   const handleCardMenuClose = () => {
     setCardAnchorEl(null)
   }
 
   const handleCardMenuOpen = (event: React.ChangeEvent<HTMLButtonElement>, cardId: string) => {
-    setCardAnchorEl(event.currentTarget);
+    setCardAnchorEl(event.currentTarget)
 
     const cardToModify = cards.find(card => card.id === cardId)
     if (cardToModify) {
       setCardToEdit(cardToModify)
     }
-  };
+  }
 
   const toggleEditCardModal = () => {
     setEditCardModalOpen(!editCardModalOpen)
@@ -223,7 +225,7 @@ export const Board: React.FC = () => {
    * Is called with columns and cards are moved.
    */
   const onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId, type } = result;
+    const { destination, source, draggableId, type } = result
     if (!destination) { return }
 
     if (destination.droppableId === source.droppableId && destination.index === source.index) { return }
@@ -236,12 +238,12 @@ export const Board: React.FC = () => {
       if (!columnToMove) return
 
       let reOrderedColumns = columns
-      reOrderedColumns.splice(source.index, 1);
-      reOrderedColumns.splice(destination.index, 0, columnToMove);
+      reOrderedColumns.splice(source.index, 1)
+      reOrderedColumns.splice(destination.index, 0, columnToMove)
       // TODO: Do we need columns prop?
       reOrderedColumns = reOrderedColumns.map((col, index) => ({ ...col, order: index, index: index }))
       saveColumns(reOrderedColumns)
-      return;
+      return
     }
 
     /**
@@ -256,15 +258,15 @@ export const Board: React.FC = () => {
     // Card dropped inside same column
     if (startColumn && finishColumn && startColumn.id === finishColumn.id) {
       let cardsInDroppedColumn = cards.filter(card => card.columnId === startColumn.id) 
-      cardsInDroppedColumn.splice(source.index, 1);
-      cardsInDroppedColumn.splice(destination.index, 0, cardToMove);
+      cardsInDroppedColumn.splice(source.index, 1)
+      cardsInDroppedColumn.splice(destination.index, 0, cardToMove)
 
       cardsInDroppedColumn = cardsInDroppedColumn.map((card, index) => ({ ...card, order: index, index: index }))
       saveCards([
         ...cards.filter(card => card.columnId !== startColumn.id),
         ...cardsInDroppedColumn
       ])
-      return;
+      return
     }
 
     // Card dropped in different column
@@ -324,15 +326,14 @@ export const Board: React.FC = () => {
               {provided.placeholder}
               <AddColumn onClick={toggleAddColumnModal}>
                 <AddIcon style={{ color: theme.palette.text.primary }} />
-                <AddColumnText theme={theme}>Add Column</AddColumnText>
+                <AddColumnText theme={theme}>{t('board.addColumn')}</AddColumnText>
               </AddColumn>
               <AddColumnModal
                 addColumnModalOpen={addColumnModalOpen}
                 toggleAddColumnModal={toggleAddColumnModal}
                 onAddColumn={onAddColumn}
               /> 
-            </BoardContainer>
-          
+            </BoardContainer> 
           </div>
         )}
       </Droppable>
@@ -340,11 +341,11 @@ export const Board: React.FC = () => {
 
       {/* Column Actions */}
       <ColumnMenu
-        anchorEl={anchorEl}
+        columnAnchorEl={columnAnchorEl}
         handleColumnMenuClose={handleColumnMenuClose}
         toggleEditColumnModal={toggleEditColumnModal}
         toggleDeleteColumnModal={toggleDeleteColumnModal}
-        canDeleteColumn={cards.length === 0}
+        cards={cards}
       />
       {editColumn && (
         <>

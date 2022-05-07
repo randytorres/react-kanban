@@ -1,0 +1,46 @@
+{
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "board": {
+    "addColumn": "Add Column"
+  },
+  "column": {
+    "addColumn": {
+      "title": "Add a Column",
+      "nameInputLabel": "Column Name"
+    },
+    "editColumn": {
+      "title": "Edit Column",
+      "nameInputLabel": "Column Name"
+    },
+    "deleteColumn": {
+      "title": "Delete Column",
+      "description": "This action will delete the column."
+    }
+  },
+  "card": {
+    "statusTitle": "Status",
+    "statusOpen": "Open",
+    "statusClosed": "Closed",
+    "addCard": {
+      "name": "Enter a name",
+      "description": "Description",
+      "helperText1": "Click the",
+      "helperText2": "icon above to add an item!"
+    },
+    "editCard": {
+      "title": "Edit Card",
+      "nameInputLabel": "Card Name",
+      "descriptionInputLabel": "Description"
+    }
+  },
+  "actions": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create": "Create",
+    "update": "Update",
+    "archive": "Archive"
+  }
+}

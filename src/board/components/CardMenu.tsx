@@ -1,6 +1,7 @@
 import React from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { useTranslation } from 'react-i18next'
 
 interface CardMenuProps {
   cardAnchorEl: any 
@@ -10,8 +11,9 @@ interface CardMenuProps {
 }
 
 export const CardMenu: React.FC<CardMenuProps> = (props) => {
+  const { t } = useTranslation()
   const { cardAnchorEl, handleCardMenuClose, toggleEditCardModal, onArchiveCard } = props
-  const cardMenuOpen = Boolean(cardAnchorEl);
+  const cardMenuOpen = Boolean(cardAnchorEl)
 
   return (
     <Menu
@@ -23,8 +25,8 @@ export const CardMenu: React.FC<CardMenuProps> = (props) => {
         'aria-labelledby': 'basic-button',
       }}
     >
-      <MenuItem onClick={toggleEditCardModal}>Edit</MenuItem>
-      <MenuItem onClick={onArchiveCard}>Archive</MenuItem>
+      <MenuItem onClick={toggleEditCardModal}>{t('actions.edit')}</MenuItem>
+      <MenuItem onClick={onArchiveCard}>{t('actions.archive')}</MenuItem>
     </Menu>
   )
 }

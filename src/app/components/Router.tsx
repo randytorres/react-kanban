@@ -1,7 +1,7 @@
 import React from 'react'
-import { Routes, Route, Link } from "react-router-dom";
-import { Board } from '../../board';
-import { NotFound } from './NotFound';
+import { Routes, Route, Link } from "react-router-dom"
+import { Board } from '../../board'
+import { NotFound } from './NotFound'
 
 export const Router = () => {
   return (

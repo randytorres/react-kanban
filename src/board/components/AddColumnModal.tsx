@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import { useTranslation } from 'react-i18next'
 
 interface AddColumnModalProps {
   addColumnModalOpen: boolean 
@@ -13,6 +14,7 @@ interface AddColumnModalProps {
 }
 
 export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
+  const { t } = useTranslation()
   const [newColumnName, setNewColumnName] = useState<string>('')
 
   const {
@@ -33,20 +35,20 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
       open={addColumnModalOpen}
       onClose={toggleAddColumnModal} 
     >
-      <DialogTitle>Add a Column</DialogTitle>
+      <DialogTitle>{t('column.addColumn.title')}</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin='dense'
-          label='Column Name'
+          label={t('column.addColumn.nameInputLabel')}
           fullWidth
           variant='standard'
           onChange={onChangeText}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={toggleAddColumnModal} color='error' variant='contained'>Cancel</Button>
-        <Button onClick={onAddColumn} color='success' variant='contained'>Create</Button>
+        <Button onClick={toggleAddColumnModal} color='error' variant='contained'>{t('actions.cancel')}</Button>
+        <Button onClick={onAddColumn} color='success' variant='contained'>{t('actions.add')}</Button>
       </DialogActions>
     </Dialog>
 

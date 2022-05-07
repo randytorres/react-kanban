@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'
 import IconButton from '@mui/material/IconButton'
-import { TextField } from '@mui/material';
-import Button from '@mui/material/Button';
-import { useTheme, Theme } from '@mui/material/styles';
+import { TextField } from '@mui/material'
+import Button from '@mui/material/Button'
+import { useTheme, Theme } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
 
-import { Card } from './Card';
-import { CardStatus, ICard, IColumn } from '../../global/interfaces';
+import { Card } from './Card'
+import { CardStatus, ICard, IColumn } from '../../global/interfaces'
 
 export interface ColumnProps extends IColumn {
   cards: ICard[]
@@ -22,6 +23,7 @@ export interface ColumnProps extends IColumn {
 
 export const Column: React.FC<ColumnProps> = (props) => {
   const theme = useTheme()
+  const { t } = useTranslation()
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
   const [cardName, setCardName] = useState('')
   const [description, setDescription] = useState('')
@@ -65,7 +67,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
               <IconButton onClick={onOpenAddCardDisplay} disableRipple>
                 <AddIcon />
               </IconButton>
-              <IconButton onClick={onColumnSettingsClick} disableRipple>
+              <IconButton onClick={onColumnSettingsClick} disableRipple id={id}>
                 <FontAwesomeIcon icon={faEllipsis} />
               </IconButton>
             </IconContainer>
@@ -77,7 +79,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
                   multiline
                   autoFocus
                   margin='dense'
-                  label='Enter a name'
+                  label={t('card.addCard.name')}
                   fullWidth
                   variant='standard'
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCardName(e.target.value)}
@@ -85,7 +87,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
                 />
                 <TextField
                   margin='dense'
-                  label='Description'
+                  label={t('card.addCard.description')}
                   fullWidth
                   variant='standard'
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
@@ -98,14 +100,14 @@ export const Column: React.FC<ColumnProps> = (props) => {
                     color='success'
                     variant='contained'
                   >
-                    Add
+                    {t('actions.add')}
                   </AddButton>
                   <CancelButton
                     onClick={onCloseAddCardDisplay}
                     color='error'
                     variant='contained'
                   >
-                    Cancel
+                    {t('actions.cancel')}
                   </CancelButton>
                 </ActionContainer>
               </AddCardContainer>
@@ -122,7 +124,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
                     ? cardsWithColumnData
                     : addCardDisplayOpen
                       ? null
-                      : <HelperText>Click the <AddIcon style={{ margin: '0 5px' }} /> icon above to add an item!</HelperText>
+                      : <HelperText>{t('card.addCard.helperText1')} <AddIcon style={{ margin: '0 5px' }} /> {t('card.addCard.helperText2')}</HelperText>
                   }
                   {provided.placeholder}
                 </div>

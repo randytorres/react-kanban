@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import Button from '@mui/material/Button';
+import Button from '@mui/material/Button'
+import { useTranslation } from 'react-i18next'
 
-import { DialogContentText } from '@mui/material';
+import { DialogContentText } from '@mui/material'
 
 interface DeleteColumnModalProps {
   deleteColumnModalOpen: boolean 
@@ -14,6 +15,7 @@ interface DeleteColumnModalProps {
 }
 
 export const DeleteColumnModal: React.FC<DeleteColumnModalProps> = (props) => {
+  const { t } = useTranslation()
   const {
     deleteColumnModalOpen,
     toggleDeleteColumnModal,
@@ -29,15 +31,15 @@ export const DeleteColumnModal: React.FC<DeleteColumnModalProps> = (props) => {
       open={deleteColumnModalOpen}
       onClose={onCloseModal} 
     >
-      <DialogTitle>Delete Column</DialogTitle>
+      <DialogTitle>{t('column.deleteColumn.title')}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          This action will delete the column.
+          {t('column.deleteColumn.description')}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onDeleteColumn} color='error' variant='contained'>Delete Column</Button>
-        <Button onClick={onCloseModal} variant='contained'>Cancel</Button>
+        <Button onClick={onDeleteColumn} color='error' variant='contained'>{t('actions.delete')}</Button>
+        <Button onClick={onCloseModal} variant='contained'>{t('actions.cancel')}</Button>
       </DialogActions>
     </Dialog>
   )

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import { useTranslation } from 'react-i18next'
 
-import { IColumn } from '../../global/interfaces';
+import { IColumn } from '../../global/interfaces'
 
 interface EditColumnModalProps {
   editColumnModalOpen: boolean 
@@ -16,7 +17,8 @@ interface EditColumnModalProps {
 }
 
 export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
-  const [editColumnText, setEditColumnText] = useState<string>(props.column.name);
+  const { t } = useTranslation()
+  const [editColumnText, setEditColumnText] = useState<string>(props.column.name)
 
   const {
     editColumnModalOpen,
@@ -36,12 +38,12 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
       open={editColumnModalOpen}
       onClose={toggleEditColumnModal} 
     >
-      <DialogTitle>Edit Column</DialogTitle>
+      <DialogTitle>{t('column.editColumn.title')}</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin='dense'
-          label='Column Name'
+          label={t('column.editColumn.nameInputLabel')}
           fullWidth
           variant='standard'
           onChange={onEditColumnName}
@@ -49,8 +51,8 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={toggleEditColumnModal} color='error' variant='contained'>Cancel</Button>
-        <Button onClick={onEditColumnSave} color='success' variant='contained'>Update Column</Button>
+        <Button onClick={toggleEditColumnModal} color='error' variant='contained'>{t('actions.cancel')}</Button>
+        <Button onClick={onEditColumnSave} color='success' variant='contained'>{t('actions.update')}</Button>
       </DialogActions>
     </Dialog>
   )

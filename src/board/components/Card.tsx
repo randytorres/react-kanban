@@ -11,6 +11,7 @@ import ToggleButton from '@mui/material/ToggleButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import { useTheme, Theme } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
 
 import { CardStatus, ICard } from '../../global/interfaces'
 import { CardActions } from '@mui/material'
@@ -22,6 +23,7 @@ export interface CardProps extends ICard {
 
 export const Card: React.FC<CardProps> = (props) => {
   const theme = useTheme()
+  const { t } = useTranslation()
   const { id, index, name, description, handleCardMenuOpen, status } = props
 
   const onCardSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -57,15 +59,15 @@ export const Card: React.FC<CardProps> = (props) => {
           </CardContent>
           <CardActions>
             <ToggleButtonContainer>
-              <StatusText>Status:</StatusText>
+              <StatusText>{t('card.statusTitle')}:</StatusText>
               <ToggleButtonGroup
                 color='primary'
                 value={status}
                 exclusive
                 onChange={handleCardStatusChange}
               >
-                <ToggleButton value={CardStatus.Open} size='small' color='success'>Open</ToggleButton>
-                <ToggleButton value={CardStatus.Closed} size='small' color='secondary'>Closed</ToggleButton>
+                <ToggleButton value={CardStatus.Open} size='small' color='success'>{t('card.statusOpen')}</ToggleButton>
+                <ToggleButton value={CardStatus.Closed} size='small' color='secondary'>{t('card.statusClosed')}</ToggleButton>
               </ToggleButtonGroup>
             </ToggleButtonContainer>
           </CardActions>

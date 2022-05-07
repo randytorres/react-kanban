@@ -1,31 +1,41 @@
 import React from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { useTranslation } from 'react-i18next'
+import { ICard } from '../../global/interfaces'
 
 interface ColumnMenuProps {
-  anchorEl: any 
+  columnAnchorEl: any 
   handleColumnMenuClose: () => void
   toggleEditColumnModal: () => void
   toggleDeleteColumnModal: () => void
-  canDeleteColumn: boolean
+  cards: ICard[]
 }
 
 export const ColumnMenu: React.FC<ColumnMenuProps> = (props) => {
-  const { anchorEl, canDeleteColumn, handleColumnMenuClose, toggleEditColumnModal, toggleDeleteColumnModal } = props
-  const columnMenuOpen = Boolean(anchorEl);
+  const { t } = useTranslation()
+  const { cards, columnAnchorEl, handleColumnMenuClose, toggleEditColumnModal, toggleDeleteColumnModal } = props
+  const columnMenuOpen = Boolean(columnAnchorEl)
+  let deleteDisabled
+
+  const columnId = columnAnchorEl?.id
+  if (columnId) {
+    const cardsInColumn = cards.filter(card => card.columnId === columnId)
+    deleteDisabled = cardsInColumn.length > 0
+  }
 
   return (
     <Menu
       id='basic-menu'
-      anchorEl={anchorEl}
+      anchorEl={columnAnchorEl}
       open={columnMenuOpen}
       onClose={handleColumnMenuClose}
       MenuListProps={{
         'aria-labelledby': 'basic-button',
       }}
     >
-      <MenuItem onClick={toggleEditColumnModal}>Edit</MenuItem>
-      <MenuItem onClick={toggleDeleteColumnModal} disabled={!canDeleteColumn}>Delete</MenuItem>
+      <MenuItem onClick={toggleEditColumnModal}>{t('actions.edit')}</MenuItem>
+      <MenuItem onClick={toggleDeleteColumnModal} disabled={deleteDisabled}>{t('actions.delete')}</MenuItem>
     </Menu>
   )
 }
