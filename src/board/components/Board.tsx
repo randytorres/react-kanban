@@ -36,26 +36,26 @@ export const Board: React.FC = () => {
   const [editColumnModalOpen, setEditColumnModalOpen] = useState<boolean>(false)
   const [deleteColumnModalOpen, setDeleteColumnModalOpen] = useState<boolean>(false)
   const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
-  // Cards/Columns to edit 
+  // Cards/Columns to edit
   const [columnToEdit, setColumnToEdit] = React.useState<IColumn>()
   const [cardToEdit, setCardToEdit] = React.useState<ICard>()
   // Menu anchor elements
   const [columnAnchorEl, setColumnAnchorEl] = React.useState<Element | null>(null)
   const [cardAnchorEl, setCardAnchorEl] = React.useState<Element | null>(null)
 
-  const saveColumns = (columns: IColumn[]) => {
-    window.localStorage.setItem('columns', JSON.stringify(columns))
-    setColumns(columns)
+  const saveColumns = (columnsToSave: IColumn[]) => {
+    window.localStorage.setItem('columns', JSON.stringify(columnsToSave))
+    setColumns(columnsToSave)
   }
 
-  const saveCards = (cards: ICard[]) => {
-    window.localStorage.setItem('cards', JSON.stringify(cards))
-    setCards(cards)
+  const saveCards = (cardsToSave: ICard[]) => {
+    window.localStorage.setItem('cards', JSON.stringify(cardsToSave))
+    setCards(cardsToSave)
   }
 
-  const saveArchivedCards = (cards: ICard[]) => {
-    window.localStorage.setItem('archived_cards', JSON.stringify(cards))
-    setArchivedCards(cards)
+  const saveArchivedCards = (archivedCardsToSave: ICard[]) => {
+    window.localStorage.setItem('archived_cards', JSON.stringify(archivedCardsToSave))
+    setArchivedCards(archivedCardsToSave)
   }
 
   /**
@@ -72,8 +72,8 @@ export const Board: React.FC = () => {
   const handleColumnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, columnId: string) => {
     setColumnAnchorEl(event.currentTarget)
 
-    const columnToEdit = findItemById(columns, columnId)
-    setColumnToEdit(columnToEdit)
+    const columnClicked = findItemById(columns, columnId)
+    setColumnToEdit(columnClicked)
   }
 
   const handleColumnMenuClose = () => {
@@ -161,7 +161,7 @@ export const Board: React.FC = () => {
       id: uuidv4(),
       columnId,
       name: cardName,
-      description: description,
+      description,
       createdAt: new Date(),
       status: CardStatus.Open,
       order: newIndex,
@@ -250,7 +250,7 @@ export const Board: React.FC = () => {
 
     /**
      * Handle Card Moved
-     * **/
+     */
     const startColumn = findItemById(columns, source.droppableId)
     const finishColumn = findItemById(columns, destination.droppableId)
     const cardToMove = findItemById(cards, draggableId)
@@ -259,7 +259,7 @@ export const Board: React.FC = () => {
 
     // Card dropped inside same column
     if (startColumn?.id === finishColumn.id) {
-      let cardsInDroppedColumn = getCardsInColumn(cards, startColumn.id) 
+      let cardsInDroppedColumn = getCardsInColumn(cards, startColumn.id)
       cardsInDroppedColumn.splice(source.index, 1)
       cardsInDroppedColumn.splice(destination.index, 0, cardToMove)
 
@@ -295,12 +295,12 @@ export const Board: React.FC = () => {
 
   /**
    * Restores data from localStorage
-   * */ 
+   */
   useEffect(() => {
     const savedColumns = window.localStorage.getItem('columns')
     const savedCards = window.localStorage.getItem('cards')
     const savedArchivedCards = window.localStorage.getItem('archived_cards')
-    
+
     if (savedColumns) {
       setColumns(JSON.parse(savedColumns))
     }
@@ -311,8 +311,6 @@ export const Board: React.FC = () => {
       setArchivedCards(JSON.parse(savedArchivedCards))
     }
   }, [])
-
-  console.info('cardToEdit', cardToEdit)
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -340,12 +338,12 @@ export const Board: React.FC = () => {
                 addColumnModalOpen={addColumnModalOpen}
                 toggleAddColumnModal={toggleAddColumnModal}
                 onAddColumn={onAddColumn}
-              /> 
-            </BoardContainer> 
+              />
+            </BoardContainer>
           </div>
         )}
       </Droppable>
-      
+
 
       {/* Column Actions */}
       <ColumnMenu
@@ -386,7 +384,7 @@ export const Board: React.FC = () => {
           onEditCardSave={onEditCardSave}
         />
       )}
-      
+
     </DragDropContext>
   )
 }

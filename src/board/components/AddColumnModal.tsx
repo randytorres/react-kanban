@@ -8,9 +8,9 @@ import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 
 interface AddColumnModalProps {
-  addColumnModalOpen: boolean 
+  addColumnModalOpen: boolean
   toggleAddColumnModal: () => void
-  onAddColumn: (columnName: string) => void 
+  onAddColumn: (columnName: string) => void
 }
 
 export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
@@ -41,7 +41,7 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
   return (
     <Dialog
       open={addColumnModalOpen}
-      onClose={toggleAddColumnModal} 
+      onClose={toggleAddColumnModal}
     >
       <DialogTitle>{t('column.addColumn.title')}</DialogTitle>
       <DialogContent>

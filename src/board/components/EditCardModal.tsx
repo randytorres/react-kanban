@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { ICard } from '../../global/interfaces'
 
 interface EditCardModalProps {
-  editCardModalOpen: boolean 
+  editCardModalOpen: boolean
   toggleEditCardModal: () => void
   onEditCardSave: (name: string, description: string) => void
   card: ICard
@@ -46,7 +46,7 @@ export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
   return (
     <Dialog
       open={editCardModalOpen}
-      onClose={toggleEditCardModal} 
+      onClose={toggleEditCardModal}
     >
       <DialogTitle>{t('card.editCard.title')}</DialogTitle>
       <DialogContent>

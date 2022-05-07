@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { IColumn } from '../../global/interfaces'
 
 interface EditColumnModalProps {
-  editColumnModalOpen: boolean 
+  editColumnModalOpen: boolean
   toggleEditColumnModal: () => void
   onEditColumnSave: (editColumnText: string) => void
   column: IColumn
@@ -40,7 +40,7 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
   return (
     <Dialog
       open={editColumnModalOpen}
-      onClose={toggleEditColumnModal} 
+      onClose={toggleEditColumnModal}
     >
       <DialogTitle>{t('column.editColumn.title')}</DialogTitle>
       <DialogContent>

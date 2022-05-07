@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { DialogContentText } from '@mui/material'
 
 interface DeleteColumnModalProps {
-  deleteColumnModalOpen: boolean 
+  deleteColumnModalOpen: boolean
   toggleDeleteColumnModal: () => void
   onDeleteColumn: () => void
 }
@@ -19,7 +19,7 @@ export const DeleteColumnModal: React.FC<DeleteColumnModalProps> = (props) => {
   const {
     deleteColumnModalOpen,
     toggleDeleteColumnModal,
-    onDeleteColumn 
+    onDeleteColumn
   } = props
 
   const onCloseModal = () => {
@@ -29,7 +29,7 @@ export const DeleteColumnModal: React.FC<DeleteColumnModalProps> = (props) => {
   return (
     <Dialog
       open={deleteColumnModalOpen}
-      onClose={onCloseModal} 
+      onClose={onCloseModal}
     >
       <DialogTitle>{t('column.deleteColumn.title')}</DialogTitle>
       <DialogContent>

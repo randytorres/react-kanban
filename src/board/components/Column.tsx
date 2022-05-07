@@ -32,7 +32,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
 
   const { id, order, name, cards, handleColumnMenuOpen, handleCardMenuOpen, handleCardStatusChange } = props
 
-  const onOpenAddCardDisplay = () =>{
+  const onOpenAddCardDisplay = () => {
     setAddCardDisplayOpen(true)
   }
 
@@ -63,7 +63,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
       setDescriptionErrorText('Description is required')
       return
     }
-    
+
     props.onAddCard(cardName, description, id)
 
     setCardName('')
@@ -141,12 +141,12 @@ export const Column: React.FC<ColumnProps> = (props) => {
                 </ActionContainer>
               </AddCardContainer>
             )}
-          
+
             <Droppable droppableId={id} type='card'>
-              {(provided) => (
+              {(droppableProvided) => (
                 <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
+                  ref={droppableProvided.innerRef}
+                  {...droppableProvided.droppableProps}
                   style={{ height: '100%' }}
                 >
                   {cardsWithColumnData.length > 0
@@ -155,7 +155,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
                       ? null
                       : <HelperText>{t('card.addCard.helperText1')} <AddIcon style={{ margin: '0 5px' }} /> {t('card.addCard.helperText2')}</HelperText>
                   }
-                  {provided.placeholder}
+                  {droppableProvided.placeholder}
                 </div>
               )}
             </Droppable>
@@ -185,7 +185,7 @@ const HeaderContainer = styled.div(({ theme }: { theme: Theme }) => ({
 
 const IconContainer = styled.div({
   display: 'flex',
-  alignItems: 'center', 
+  alignItems: 'center',
 })
 
 const Title = styled.h3({

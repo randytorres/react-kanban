@@ -35,7 +35,7 @@ export const App: React.FC = () => {
         </Header>
         <Router />
    </Box>
-  ) 
+  )
 }
 
 const Header = styled.div({

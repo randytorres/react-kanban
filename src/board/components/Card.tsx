@@ -58,7 +58,7 @@ export const Card: React.FC<CardProps> = (props) => {
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               {description}
-            </Typography> 
+            </Typography>
           </CardContent>
           <CardActions>
             <ToggleButtonContainer>
