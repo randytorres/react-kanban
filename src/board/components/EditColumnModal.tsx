@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -18,7 +18,7 @@ interface EditColumnModalProps {
 
 export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
   const { t } = useTranslation()
-  const [editColumnText, setEditColumnText] = useState<string>(props.column.name)
+  const [name, setName] = useState<string>(props.column.name)
 
   const {
     editColumnModalOpen,
@@ -26,12 +26,16 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
   } = props
 
   const onEditColumnName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditColumnText(e?.target?.value)
+    setName(e?.target?.value)
   }
 
   const onEditColumnSave = () => {
-    props.onEditColumnSave(editColumnText)
+    props.onEditColumnSave(name)
   }
+
+  useEffect(() => {
+    setName(props.column.name)
+  }, [props.column])
 
   return (
     <Dialog
@@ -47,7 +51,7 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
           fullWidth
           variant='standard'
           onChange={onEditColumnName}
-          value={editColumnText}
+          value={name}
         />
       </DialogContent>
       <DialogActions>

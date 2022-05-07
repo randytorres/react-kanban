@@ -14,7 +14,7 @@ import { ColumnMenu } from './ColumnMenu'
 import { CardMenu } from './CardMenu'
 import { EditCardModal } from './EditCardModal'
 import { CardStatus, ICard, IColumn } from '../../global/interfaces'
-import { findItemById, getCardsInColumn, updateOrder } from '../utils'
+import { findItemById, getCardsInColumn, updateOrder } from '../utils/boardUtils'
 
 // TODO:
   // Unit Tests
@@ -140,6 +140,7 @@ export const Board: React.FC = () => {
    */
   const handleCardMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, cardId: string) => {
     setCardAnchorEl(event.currentTarget)
+
 
     const cardToModify = findItemById(cards, cardId)
     setCardToEdit(cardToModify)
@@ -310,6 +311,8 @@ export const Board: React.FC = () => {
       setArchivedCards(JSON.parse(savedArchivedCards))
     }
   }, [])
+
+  console.info('cardToEdit', cardToEdit)
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

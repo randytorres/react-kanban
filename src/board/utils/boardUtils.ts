@@ -1,4 +1,4 @@
-import { ICard } from "../global/interfaces"
+import { ICard } from "../../global/interfaces"
 
 export const updateOrder = (array: any[]) => array.map((item: any, index: number) => ({ ...item, order: index }))
 

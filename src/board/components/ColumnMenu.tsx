@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { useTranslation } from 'react-i18next'
 
 import { ICard } from '../../global/interfaces'
-import { getCardsInColumn } from '../utils'
+import { getCardsInColumn } from '../utils/boardUtils'
 
 interface ColumnMenuProps {
   columnAnchorEl: Element | null

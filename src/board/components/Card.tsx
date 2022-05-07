@@ -52,7 +52,7 @@ export const Card: React.FC<CardProps> = (props) => {
               </IconButton>
             }
             subheader={(
-              <p>Created: {t('intlDateTime', { val: new Date(createdAt) })}</p>
+              <CreatedAt variant='subtitle2'>Created: {t('intlDateTime', { val: new Date(createdAt) })}</CreatedAt>
             )}
           />
           <CardContent>
@@ -96,5 +96,9 @@ const ToggleButtonContainer = styled.div({
 const StatusText = styled.p({
   fontWeight: 'bold',
   paddingRight: 10,
-  fontSize: 14,
+  fontSize: '0.85rem',
+})
+
+const CreatedAt = styled(Typography)({
+  paddingTop: 10,
 })

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -37,6 +37,11 @@ export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
   const onEditCardSave = () => {
     props.onEditCardSave(name, description)
   }
+
+  useEffect(() => {
+    setName(props.card.name)
+    setDescription(props.card.description)
+  }, [props.card])
 
   return (
     <Dialog

@@ -27,5 +27,5 @@ const Container = styled.div({
 })
 
 const Link = styled.p({
-  fontSize: 24,
+  fontSize: '1.25rem',
 })

@@ -173,6 +173,7 @@ const ColumnContainer = styled.div(({ theme }: { theme: Theme }) => ({
   borderRadius: 5,
   marginRight: 16,
   overflow: 'scroll',
+  backgroundColor: theme.palette.action.hover,
 }))
 
 const HeaderContainer = styled.div(({ theme }: { theme: Theme }) => ({
