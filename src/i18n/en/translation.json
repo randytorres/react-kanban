@@ -46,5 +46,6 @@
     "create": "Create",
     "update": "Update",
     "archive": "Archive"
-  }
+  },
+  "intlDateTime": "{{val, datetime}}"
 }

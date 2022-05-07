@@ -1,6 +1,8 @@
 import React from 'react'
 import * as ReactDOM from "react-dom"
 import { BrowserRouter } from "react-router-dom"
+import '@formatjs/intl-datetimeformat/polyfill'
+
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import AppContainer from './app/components/AppContainer'
 import reportWebVitals from './reportWebVitals'

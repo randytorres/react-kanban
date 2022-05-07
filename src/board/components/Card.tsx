@@ -24,7 +24,7 @@ export interface CardProps extends ICard {
 export const Card: React.FC<CardProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation()
-  const { id, index, name, description, handleCardMenuOpen, status } = props
+  const { id, index, name, description, createdAt, status, handleCardMenuOpen } = props
 
   const onCardSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     handleCardMenuOpen(e, id)
@@ -51,6 +51,9 @@ export const Card: React.FC<CardProps> = (props) => {
                 <FontAwesomeIcon icon={faEllipsis} />
               </IconButton>
             }
+            subheader={(
+              <p>Created: {t('intlDateTime', { val: new Date(createdAt) })}</p>
+            )}
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">

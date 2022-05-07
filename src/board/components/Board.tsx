@@ -16,6 +16,8 @@ import { EditCardModal } from './EditCardModal'
 import { CardStatus, ICard, IColumn } from '../../global/interfaces'
 
 // TODO:
+  // Add createdAt date to card
+  // remove index for order
   // Graceful error handling
   // Refactor
     // Create function to update array order
@@ -23,6 +25,9 @@ import { CardStatus, ICard, IColumn } from '../../global/interfaces'
   // Unit Tests
   // Add Comments
   // Styling issues
+  // Update readme
+  // Deploy
+
 
 export const Board: React.FC = () => {
   const theme = useTheme()
@@ -232,7 +237,7 @@ export const Board: React.FC = () => {
     const { destination, source, draggableId, type } = result
     if (!destination) { return }
 
-    if (destination.droppableId === source.droppableId && destination.index === source.index) { return }
+    if (destination.droppableId === source?.droppableId && destination.index === source?.index) { return }
 
     /**
      * Handle Column Moved
