@@ -11,7 +11,7 @@ import { DialogContentText } from '@mui/material'
 interface DeleteColumnModalProps {
   deleteColumnModalOpen: boolean 
   toggleDeleteColumnModal: () => void
-  onDeleteColumn: any
+  onDeleteColumn: () => void
 }
 
 export const DeleteColumnModal: React.FC<DeleteColumnModalProps> = (props) => {

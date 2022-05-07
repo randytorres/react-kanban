@@ -5,17 +5,19 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import { useTranslation } from 'react-i18next'
 
-import { ICard, IColumn } from '../../global/interfaces'
+import { ICard } from '../../global/interfaces'
 
 interface EditCardModalProps {
   editCardModalOpen: boolean 
   toggleEditCardModal: () => void
-  onEditCardSave: any
+  onEditCardSave: (name: string, description: string) => void
   card: ICard
 }
 
 export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
+  const { t } = useTranslation()
   const [name, setName] = useState<string>(props.card.name)
   const [description, setDescription] = useState<string>(props.card.description)
 
@@ -41,12 +43,12 @@ export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
       open={editCardModalOpen}
       onClose={toggleEditCardModal} 
     >
-      <DialogTitle>Edit Card</DialogTitle>
+      <DialogTitle>{t('card.editCard.title')}</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin='dense'
-          label='Card Name'
+          label={t('card.editCard.nameInputLabel')}
           fullWidth
           variant='standard'
           onChange={onEditCardName}
@@ -54,7 +56,7 @@ export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
         />
         <TextField
           margin='dense'
-          label='Description'
+          label={t('card.editCard.descriptionInputLabel')}
           fullWidth
           variant='standard'
           onChange={onEditCardDescription}
@@ -62,8 +64,8 @@ export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={toggleEditCardModal} color='error' variant='contained'>Cancel</Button>
-        <Button onClick={onEditCardSave} color='success' variant='contained'>Update Card</Button>
+        <Button onClick={toggleEditCardModal} color='error' variant='contained'>{t('actions.cancel')}</Button>
+        <Button onClick={onEditCardSave} color='success' variant='contained'>{t('actions.update')}</Button>
       </DialogActions>
     </Dialog>
   )

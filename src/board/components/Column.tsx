@@ -16,8 +16,8 @@ import { CardStatus, ICard, IColumn } from '../../global/interfaces'
 export interface ColumnProps extends IColumn {
   cards: ICard[]
   onAddCard: (cardName: string, description: string, columnId: string) => void
-  handleColumnMenuOpen: any
-  handleCardMenuOpen: any
+  handleColumnMenuOpen: (event: React.MouseEvent<HTMLButtonElement>, columnId: string) => void
+  handleCardMenuOpen: (event: React.MouseEvent<HTMLButtonElement>, cardId: string) => void
   handleCardStatusChange: (cardId: string, status: CardStatus) => void
 }
 
@@ -25,8 +25,9 @@ export const Column: React.FC<ColumnProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const [addCardDisplayOpen, setAddCardDisplayOpen] = useState<boolean>(false)
-  const [cardName, setCardName] = useState('')
-  const [description, setDescription] = useState('')
+  const [cardName, setCardName] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
+
   const { id, index, name, cards, handleColumnMenuOpen, handleCardMenuOpen, handleCardStatusChange } = props
 
   const onOpenAddCardDisplay = () =>{

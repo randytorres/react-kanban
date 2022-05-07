@@ -15,18 +15,14 @@ import { CardMenu } from './CardMenu'
 import { EditCardModal } from './EditCardModal'
 import { Theme, useTheme } from '@mui/material/styles'
 
-// Advanced features
-  // Test codes
+// TODO:
   // Graceful error handling
-// Structure
-  // More fields such as author, labels, assignee
-  // i18n feature
-// Performance
-  // Code splitting and lazy loading
-// Design
-  // RWD(Responsive Web Design) for desktop/mobile
-// UX
+  // Refactor
   // Input Validation
+  // Responsive design
+  // Test codes
+  // Add Comments
+  // Styling issues
 
 export const Board: React.FC = () => {
   const theme = useTheme()
@@ -38,8 +34,8 @@ export const Board: React.FC = () => {
   const [editColumnModalOpen, setEditColumnModalOpen] = useState<boolean>(false)
   const [editColumn, setEditColumn] = React.useState<IColumn>()
   const [deleteColumnModalOpen, setDeleteColumnModalOpen] = useState<boolean>(false)
-  const [columnAnchorEl, setColumnAnchorEl] = React.useState<any>(null)
-  const [cardAnchorEl, setCardAnchorEl] = React.useState<any>(null)
+  const [columnAnchorEl, setColumnAnchorEl] = React.useState<Element | null>(null)
+  const [cardAnchorEl, setCardAnchorEl] = React.useState<Element | null>(null)
   const [cardToEdit, setCardToEdit] = React.useState<ICard>()
   const [editCardModalOpen, setEditCardModalOpen] = useState<boolean>(false)
 
@@ -58,6 +54,9 @@ export const Board: React.FC = () => {
     setArchivedCards(cards)
   }
 
+  /**
+   * Columns
+   */
   const toggleAddColumnModal = () => {
     setAddColumnModalOpen(!addColumnModalOpen)
   }
@@ -66,54 +65,15 @@ export const Board: React.FC = () => {
     setEditColumnModalOpen(!editColumnModalOpen)
   }
 
-  const handleColumnMenuClose = () => {
-    setColumnAnchorEl(null)
-  }
-
-  const handleColumnMenuOpen = (event: React.ChangeEvent<HTMLButtonElement>, columnId: string) => {
+  const handleColumnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, columnId: string) => {
     setColumnAnchorEl(event.currentTarget)
 
     const columnToEdit = columns.find(col => col.id === columnId)
     setEditColumn(columnToEdit)
   }
 
-  const handleCardMenuClose = () => {
-    setCardAnchorEl(null)
-  }
-
-  const handleCardMenuOpen = (event: React.ChangeEvent<HTMLButtonElement>, cardId: string) => {
-    setCardAnchorEl(event.currentTarget)
-
-    const cardToModify = cards.find(card => card.id === cardId)
-    if (cardToModify) {
-      setCardToEdit(cardToModify)
-    }
-  }
-
-  const toggleEditCardModal = () => {
-    setEditCardModalOpen(!editCardModalOpen)
-  }
-
-  const toggleDeleteColumnModal = () => {
-    const newColumnState = !deleteColumnModalOpen
-    setDeleteColumnModalOpen(newColumnState)
-
-    // Automatically close column menu
-    if (newColumnState === false) {
-      handleColumnMenuClose()
-    }
-  } 
-
-  const onDeleteColumn = () => {
-    const newColumns = Array.from(columns)
-
-    const columnToDeleteIndex = newColumns.findIndex(col => col.id === editColumn?.id)
-
-    if (columnToDeleteIndex >= 0) {
-      newColumns.splice(columnToDeleteIndex, 1)
-      saveColumns(newColumns.map((col, index) => ({ ...col, index, order: index })))
-      toggleDeleteColumnModal()
-    }
+  const handleColumnMenuClose = () => {
+    setColumnAnchorEl(null)
   }
 
   const onAddColumn = (newColumnName: string) => {
@@ -132,6 +92,62 @@ export const Board: React.FC = () => {
     saveColumns(newColumns)
 
     toggleAddColumnModal()
+  }
+
+  const onEditColumnSave = (editColumnText: string) => {
+    if (!editColumn) return
+
+    const editedColumns = Array.from(columns)
+    const columnToEditIndex = columns.findIndex(col => col.id === editColumn?.id)
+    editedColumns[columnToEditIndex] = {
+      ...editColumn,
+      name: editColumnText
+    }
+
+    saveColumns(editedColumns)
+
+    toggleEditColumnModal()
+    handleColumnMenuClose()
+  }
+
+  const onDeleteColumn = () => {
+    const newColumns = Array.from(columns)
+
+    const columnToDeleteIndex = newColumns.findIndex(col => col.id === editColumn?.id)
+
+    if (columnToDeleteIndex >= 0) {
+      newColumns.splice(columnToDeleteIndex, 1)
+      saveColumns(newColumns.map((col, index) => ({ ...col, index, order: index })))
+      toggleDeleteColumnModal()
+    }
+  }
+
+  const toggleDeleteColumnModal = () => {
+    const newColumnState = !deleteColumnModalOpen
+    setDeleteColumnModalOpen(newColumnState)
+
+    // Automatically close column menu
+    if (newColumnState === false) {
+      handleColumnMenuClose()
+    }
+  }
+
+  /**
+   * Cards
+   */
+  const handleCardMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, cardId: string) => {
+    setCardAnchorEl(event.currentTarget)
+
+    const cardToModify = cards.find(card => card.id === cardId)
+    setCardToEdit(cardToModify)
+  }
+
+  const handleCardMenuClose = () => {
+    setCardAnchorEl(null)
+  }
+
+  const toggleEditCardModal = () => {
+    setEditCardModalOpen(!editCardModalOpen)
   }
 
   const onAddCard = (cardName: string, description: string, columnId: string) => {
@@ -153,22 +169,6 @@ export const Board: React.FC = () => {
     ]
 
     saveCards(newCards)
-  }
-
-  const onEditColumnSave = (editColumnText: string) => {
-    if (!editColumn) return
-
-    const editedColumns = Array.from(columns)
-    const columnToEditIndex = columns.findIndex(col => col.id === editColumn?.id)
-    editedColumns[columnToEditIndex] = {
-      ...editColumn,
-      name: editColumnText
-    }
-
-    saveColumns(editedColumns)
-
-    toggleEditColumnModal()
-    handleColumnMenuClose()
   }
 
   const onEditCardSave = (name: string, description: string) => {
@@ -222,7 +222,7 @@ export const Board: React.FC = () => {
   }
 
   /**
-   * Is called with columns and cards are moved.
+   * Drag and Drop - Called when columns and cards are moved.
    */
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result

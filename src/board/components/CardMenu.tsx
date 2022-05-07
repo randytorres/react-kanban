@@ -1,10 +1,11 @@
 import React from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { PopoverProps } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 interface CardMenuProps {
-  cardAnchorEl: any 
+  cardAnchorEl: PopoverProps['anchorEl']
   handleCardMenuClose: () => void
   toggleEditCardModal: () => void
   onArchiveCard: () => void

@@ -8,16 +8,16 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
+import CardActions from '@mui/material/CardActions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import { useTheme, Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 
 import { CardStatus, ICard } from '../../global/interfaces'
-import { CardActions } from '@mui/material'
 
 export interface CardProps extends ICard {
-  handleCardMenuOpen: any
+  handleCardMenuOpen:  (event: React.MouseEvent<HTMLButtonElement>, cardId: string) => void
   handleCardStatusChange: (cardId: string, status: CardStatus) => void
 }
 

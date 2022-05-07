@@ -12,7 +12,7 @@ import { IColumn } from '../../global/interfaces'
 interface EditColumnModalProps {
   editColumnModalOpen: boolean 
   toggleEditColumnModal: () => void
-  onEditColumnSave: any
+  onEditColumnSave: (editColumnText: string) => void
   column: IColumn
 }
 

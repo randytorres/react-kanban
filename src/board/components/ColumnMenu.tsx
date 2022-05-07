@@ -2,10 +2,10 @@ import React from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useTranslation } from 'react-i18next'
-import { ICard } from '../../global/interfaces'
 
+import { ICard } from '../../global/interfaces'
 interface ColumnMenuProps {
-  columnAnchorEl: any 
+  columnAnchorEl: Element | null
   handleColumnMenuClose: () => void
   toggleEditColumnModal: () => void
   toggleDeleteColumnModal: () => void
