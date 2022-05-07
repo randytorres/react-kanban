@@ -168,11 +168,10 @@ export const Column: React.FC<ColumnProps> = (props) => {
 
 const ColumnContainer = styled.div(({ theme }: { theme: Theme }) => ({
   width: 315,
-  padding: '10px 0',
+  padding: '10px 0 60px',
   border: `1px solid ${theme.palette.action.disabled}`,
   borderRadius: 5,
   marginRight: 16,
-  overflow: 'scroll',
   backgroundColor: theme.palette.action.hover,
 }))
 
@@ -196,6 +195,7 @@ const Title = styled.h3({
 const Content = styled.div({
   padding: 10,
   height: '100%',
+  overflow: 'scroll',
 })
 
 const HelperText = styled.p({

@@ -318,7 +318,7 @@ export const Board: React.FC = () => {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId='all-columns' direction='horizontal' type='column'>
         {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef} style={{ height: '100%' }}>
+          <div {...provided.droppableProps} ref={provided.innerRef} style={{ height: '100%', paddingBottom: 35 }}>
             <BoardContainer>
               {columns.map((col) => (
                 <Column
@@ -397,6 +397,7 @@ const BoardContainer = styled.div({
   flexDirection: 'row',
   display: 'flex',
   width: 'fit-content',
+  overflowY: 'hidden',
 })
 
 const AddColumn = styled.button({
