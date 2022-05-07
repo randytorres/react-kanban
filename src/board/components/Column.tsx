@@ -30,7 +30,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
   const [nameErrorText, setNameErrorText] = useState<string>('')
   const [descriptionErrorText, setDescriptionErrorText] = useState<string>('')
 
-  const { id, index, name, cards, handleColumnMenuOpen, handleCardMenuOpen, handleCardStatusChange } = props
+  const { id, order, name, cards, handleColumnMenuOpen, handleCardMenuOpen, handleCardStatusChange } = props
 
   const onOpenAddCardDisplay = () =>{
     setAddCardDisplayOpen(true)
@@ -79,7 +79,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
     .map(card => <Card key={card.id} {...card} handleCardMenuOpen={handleCardMenuOpen} handleCardStatusChange={handleCardStatusChange}  />)
 
   return (
-    <Draggable draggableId={id} index={index} key={id}>
+    <Draggable draggableId={id} index={order} key={id}>
       {(provided) => (
         <ColumnContainer
           theme={theme}

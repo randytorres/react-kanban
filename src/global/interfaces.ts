@@ -2,7 +2,6 @@ export interface IColumn {
   id: string
   name: string
   order: number
-  index: any // TODO: Remove this
 }
 
 export interface ICard {
@@ -13,7 +12,6 @@ export interface ICard {
   createdAt: Date
   status: CardStatus
   order: number
-  index: number
 }
 
 export enum CardStatus {

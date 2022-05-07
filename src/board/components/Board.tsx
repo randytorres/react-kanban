@@ -14,14 +14,9 @@ import { ColumnMenu } from './ColumnMenu'
 import { CardMenu } from './CardMenu'
 import { EditCardModal } from './EditCardModal'
 import { CardStatus, ICard, IColumn } from '../../global/interfaces'
+import { findItemById, getCardsInColumn, updateOrder } from '../utils'
 
 // TODO:
-  // Add createdAt date to card
-  // remove index for order
-  // Graceful error handling
-  // Refactor
-    // Create function to update array order
-  // Responsive design
   // Unit Tests
   // Add Comments
   // Styling issues
@@ -77,7 +72,7 @@ export const Board: React.FC = () => {
   const handleColumnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, columnId: string) => {
     setColumnAnchorEl(event.currentTarget)
 
-    const columnToEdit = columns.find(col => col.id === columnId)
+    const columnToEdit = findItemById(columns, columnId)
     setColumnToEdit(columnToEdit)
   }
 
@@ -91,7 +86,6 @@ export const Board: React.FC = () => {
       id: uuidv4(),
       name: newColumnName,
       order: newIndex,
-      index: newIndex
     }
 
     const newColumns = [
@@ -126,7 +120,7 @@ export const Board: React.FC = () => {
 
     if (columnToDeleteIndex >= 0) {
       newColumns.splice(columnToDeleteIndex, 1)
-      saveColumns(newColumns.map((col, index) => ({ ...col, index, order: index })))
+      saveColumns(updateOrder(newColumns))
       toggleDeleteColumnModal()
     }
   }
@@ -147,7 +141,7 @@ export const Board: React.FC = () => {
   const handleCardMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, cardId: string) => {
     setCardAnchorEl(event.currentTarget)
 
-    const cardToModify = cards.find(card => card.id === cardId)
+    const cardToModify = findItemById(cards, cardId)
     setCardToEdit(cardToModify)
   }
 
@@ -160,7 +154,7 @@ export const Board: React.FC = () => {
   }
 
   const onAddCard = (cardName: string, description: string, columnId: string) => {
-    const cardsInColumn = cards.filter(card => card.columnId === columnId)
+    const cardsInColumn = getCardsInColumn(cards, columnId)
     const newIndex = cardsInColumn.length
     const newCard = {
       id: uuidv4(),
@@ -170,7 +164,6 @@ export const Board: React.FC = () => {
       createdAt: new Date(),
       status: CardStatus.Open,
       order: newIndex,
-      index: newIndex,
     }
     const newCards = [
       ...cards,
@@ -206,7 +199,7 @@ export const Board: React.FC = () => {
 
     if (cardToArchiveIndex >= 0) {
       newCards.splice(cardToArchiveIndex, 1)
-      saveCards(newCards.map((card, index) => ({ ...card, index, order: index })))
+      saveCards(updateOrder(newCards))
       saveArchivedCards([
         ...archivedCards,
         cardToEdit,
@@ -243,14 +236,13 @@ export const Board: React.FC = () => {
      * Handle Column Moved
      */
     if (type === 'column') {
-      const columnToMove = columns.find(col => col.id === draggableId)
+      const columnToMove = findItemById(columns, draggableId)
       if (!columnToMove) return
 
       let reOrderedColumns = Array.from(columns)
       reOrderedColumns.splice(source.index, 1)
       reOrderedColumns.splice(destination.index, 0, columnToMove)
-      // TODO: Do we need columns prop?
-      reOrderedColumns = reOrderedColumns.map((col, index) => ({ ...col, order: index, index: index }))
+      reOrderedColumns = updateOrder(reOrderedColumns)
       saveColumns(reOrderedColumns)
       return
     }
@@ -258,43 +250,45 @@ export const Board: React.FC = () => {
     /**
      * Handle Card Moved
      * **/
-    const startColumn = columns.find(col => col.id === source.droppableId)
-    const finishColumn = columns.find(col => col.id === destination.droppableId)
-    const cardToMove = cards.find(card => card.id === draggableId)
+    const startColumn = findItemById(columns, source.droppableId)
+    const finishColumn = findItemById(columns, destination.droppableId)
+    const cardToMove = findItemById(cards, draggableId)
 
     if (!cardToMove || !finishColumn) return
 
     // Card dropped inside same column
-    if (startColumn && finishColumn && startColumn.id === finishColumn.id) {
-      let cardsInDroppedColumn = cards.filter(card => card.columnId === startColumn.id) 
+    if (startColumn?.id === finishColumn.id) {
+      let cardsInDroppedColumn = getCardsInColumn(cards, startColumn.id) 
       cardsInDroppedColumn.splice(source.index, 1)
       cardsInDroppedColumn.splice(destination.index, 0, cardToMove)
 
-      cardsInDroppedColumn = cardsInDroppedColumn.map((card, index) => ({ ...card, order: index, index: index }))
+      cardsInDroppedColumn = updateOrder(cardsInDroppedColumn)
+      const cardsNotInDroppedColumn = cards.filter(card => card.columnId !== startColumn.id)
       saveCards([
-        ...cards.filter(card => card.columnId !== startColumn.id),
+        ...cardsNotInDroppedColumn,
         ...cardsInDroppedColumn
       ])
       return
     }
 
     // Card dropped in different column
-    const cardsInStartColumn = cards.filter(card => card.columnId === source.droppableId)
+    const cardsInStartColumn = getCardsInColumn(cards, source.droppableId)
     cardsInStartColumn.splice(source.index, 1)
 
-    const cardsInFinishColumn = cards.filter(card => card.columnId === destination.droppableId)
+    const cardsInFinishColumn = getCardsInColumn(cards, destination.droppableId)
     const newCard = {
       ...cardToMove,
       columnId: finishColumn?.id,
     }
     cardsInFinishColumn.splice(destination.index, 0, newCard)
 
-    const updatedCardInStartColumn = cardsInStartColumn.map((card, index) => ({ ...card, index, order: index }))
-    const updatedCardInFinishColumn = cardsInFinishColumn.map((card, index) => ({ ...card, index, order: index }))
+    const updatedCardsInStartColumn = updateOrder(cardsInStartColumn)
+    const updatedCardsInFinishColumn = updateOrder(cardsInFinishColumn)
+    const cardsNotInStartOrFinishColumn = cards.filter(card => card.columnId !== startColumn?.id && card.columnId !== destination.droppableId)
     saveCards([
-      ...cards.filter(card => card.columnId !== startColumn?.id && card.columnId !== destination.droppableId),
-      ...updatedCardInStartColumn,
-      ...updatedCardInFinishColumn,
+      ...cardsNotInStartOrFinishColumn,
+      ...updatedCardsInStartColumn,
+      ...updatedCardsInFinishColumn,
     ])
   }
 
@@ -323,11 +317,10 @@ export const Board: React.FC = () => {
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef} style={{ height: '100%' }}>
             <BoardContainer>
-              {columns.map((col, index) => (
+              {columns.map((col) => (
                 <Column
                   {...col}
                   key={col.id}
-                  index={index}
                   onAddCard={onAddCard}
                   cards={cards}
                   handleColumnMenuOpen={handleColumnMenuOpen}

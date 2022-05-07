@@ -24,7 +24,7 @@ export interface CardProps extends ICard {
 export const Card: React.FC<CardProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation()
-  const { id, index, name, description, createdAt, status, handleCardMenuOpen } = props
+  const { id, order, name, description, createdAt, status, handleCardMenuOpen } = props
 
   const onCardSettingsClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     handleCardMenuOpen(e, id)
@@ -35,7 +35,7 @@ export const Card: React.FC<CardProps> = (props) => {
   }
 
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={id} index={order}>
       {(provided) => (
         <CardContainer
           {...provided.draggableProps}

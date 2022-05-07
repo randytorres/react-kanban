@@ -27,11 +27,11 @@ export const EditCardModal: React.FC<EditCardModalProps> = (props) => {
   } = props
 
   const onEditCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
+    setName(e?.target?.value)
   }
 
   const onEditCardDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value)
+    setDescription(e?.target?.value)
   }
 
   const onEditCardSave = () => {

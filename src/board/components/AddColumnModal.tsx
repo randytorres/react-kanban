@@ -24,7 +24,7 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = (props) => {
   } = props
 
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewColumnName(e.target.value)
+    setNewColumnName(e?.target?.value)
     if (errorText) {
       setErrorText('')
     }

@@ -26,7 +26,7 @@ export const EditColumnModal: React.FC<EditColumnModalProps> = (props) => {
   } = props
 
   const onEditColumnName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditColumnText(e.target.value)
+    setEditColumnText(e?.target?.value)
   }
 
   const onEditColumnSave = () => {

@@ -4,6 +4,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { useTranslation } from 'react-i18next'
 
 import { ICard } from '../../global/interfaces'
+import { getCardsInColumn } from '../utils'
+
 interface ColumnMenuProps {
   columnAnchorEl: Element | null
   handleColumnMenuClose: () => void
@@ -20,7 +22,7 @@ export const ColumnMenu: React.FC<ColumnMenuProps> = (props) => {
 
   const columnId = columnAnchorEl?.id
   if (columnId) {
-    const cardsInColumn = cards.filter(card => card.columnId === columnId)
+    const cardsInColumn = getCardsInColumn(cards, columnId)
     deleteDisabled = cardsInColumn.length > 0
   }
 
