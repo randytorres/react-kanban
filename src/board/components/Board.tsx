@@ -6,23 +6,27 @@ import AddIcon from '@mui/icons-material/Add'
 import { Theme, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 
-import { Column } from './Column'
-import { DeleteColumnModal } from './DeleteColumnModal'
-import { EditColumnModal } from './EditColumnModal'
-import { AddColumnModal } from './AddColumnModal'
-import { ColumnMenu } from './ColumnMenu'
-import { CardMenu } from './CardMenu'
-import { EditCardModal } from './EditCardModal'
-import { CardStatus, ICard, IColumn } from '../../global/interfaces'
+import { CardStatus, ICard, IColumn } from 'global/interfaces'
+
+import {
+  Column,
+  ColumnMenu,
+  AddColumnModal,
+  EditColumnModal,
+  DeleteColumnModal,
+} from './Column'
+import {
+  CardMenu,
+  EditCardModal,
+} from './Card'
 import { findItemById, getCardsInColumn, updateOrder } from '../utils/boardUtils'
 
 // TODO:
   // Unit Tests
+  // Add errorText to edit card/column modals
   // Add Comments
-  // Styling issues
   // Update readme
   // Deploy
-
 
 export const Board: React.FC = () => {
   const theme = useTheme()

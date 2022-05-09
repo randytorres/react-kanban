@@ -1,10 +1,10 @@
 import React from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { PopoverProps } from '@mui/material'
+import { PopoverProps } from '@mui/material/Popover'
 import { useTranslation } from 'react-i18next'
 
-interface CardMenuProps {
+export interface CardMenuProps {
   cardAnchorEl: PopoverProps['anchorEl']
   handleCardMenuClose: () => void
   toggleEditCardModal: () => void
@@ -18,7 +18,7 @@ export const CardMenu: React.FC<CardMenuProps> = (props) => {
 
   return (
     <Menu
-      id='basic-menu'
+      id='card-menu'
       anchorEl={cardAnchorEl}
       open={cardMenuOpen}
       onClose={handleCardMenuClose}

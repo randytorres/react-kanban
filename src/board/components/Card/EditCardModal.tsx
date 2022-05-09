@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 
-import { ICard } from '../../global/interfaces'
+import { ICard } from 'global/interfaces'
 
 interface EditCardModalProps {
   editCardModalOpen: boolean

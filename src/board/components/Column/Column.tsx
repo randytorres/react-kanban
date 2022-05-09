@@ -10,8 +10,9 @@ import Button from '@mui/material/Button'
 import { useTheme, Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 
-import { Card } from './Card'
-import { CardStatus, ICard, IColumn } from '../../global/interfaces'
+import { CardStatus, ICard, IColumn } from 'global/interfaces'
+
+import { Card } from '../Card'
 
 export interface ColumnProps extends IColumn {
   cards: ICard[]
@@ -76,7 +77,14 @@ export const Column: React.FC<ColumnProps> = (props) => {
 
   const cardsWithColumnData = cards
     .filter(card => card.columnId === id)
-    .map(card => <Card key={card.id} {...card} handleCardMenuOpen={handleCardMenuOpen} handleCardStatusChange={handleCardStatusChange}  />)
+    .map(card => 
+      <Card
+        key={card.id}
+        {...card}
+        handleCardMenuOpen={handleCardMenuOpen}
+        handleCardStatusChange={handleCardStatusChange}
+      />
+    )
 
   return (
     <Draggable draggableId={id} index={order} key={id}>
@@ -90,10 +98,10 @@ export const Column: React.FC<ColumnProps> = (props) => {
           <HeaderContainer theme={theme}>
             <Title>{name}</Title>
             <IconContainer>
-              <IconButton onClick={onOpenAddCardDisplay} disableRipple>
+              <IconButton onClick={onOpenAddCardDisplay} disableRipple data-testid='add-card'>
                 <AddIcon />
               </IconButton>
-              <IconButton onClick={onColumnSettingsClick} disableRipple id={id}>
+              <IconButton onClick={onColumnSettingsClick} disableRipple id={id} data-testid='settings'>
                 <FontAwesomeIcon icon={faEllipsis} />
               </IconButton>
             </IconContainer>

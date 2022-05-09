@@ -3,10 +3,11 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useTranslation } from 'react-i18next'
 
-import { ICard } from '../../global/interfaces'
-import { getCardsInColumn } from '../utils/boardUtils'
+import { ICard } from 'global/interfaces'
 
-interface ColumnMenuProps {
+import { getCardsInColumn } from '../../utils/boardUtils'
+
+export interface ColumnMenuProps {
   columnAnchorEl: Element | null
   handleColumnMenuClose: () => void
   toggleEditColumnModal: () => void
@@ -28,7 +29,7 @@ export const ColumnMenu: React.FC<ColumnMenuProps> = (props) => {
 
   return (
     <Menu
-      id='basic-menu'
+      id='column-menu'
       anchorEl={columnAnchorEl}
       open={columnMenuOpen}
       onClose={handleColumnMenuClose}

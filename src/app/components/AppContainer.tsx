@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { PaletteMode } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
+
+import 'i18n/config'
+
 import { App } from './App'
 import { ColorModeContext } from '../utils/ColorModeContext'
-import '../../i18n/config'
 
-export default function AppContainer() {
+export function AppContainer() {
   const [mode, setMode] = React.useState<PaletteMode>('dark')
   const colorMode = React.useMemo(
     () => ({

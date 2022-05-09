@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link as RouterLink} from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-
 import styled from '@emotion/styled'
 
 export const NotFound = () => {

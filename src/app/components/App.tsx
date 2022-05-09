@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
 import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
@@ -29,7 +29,13 @@ export const App: React.FC = () => {
     >
         <Header>
           {isDark ? t('darkMode') : t('lightMode')}
-          <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit" disableFocusRipple>
+          <IconButton
+            sx={{ ml: 1 }}
+            onClick={colorMode.toggleColorMode}
+            color="inherit"
+            disableFocusRipple
+            data-testid='color-mode-toggle'
+          >
             {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </Header>

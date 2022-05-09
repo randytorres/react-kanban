@@ -14,7 +14,7 @@ import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import { useTheme, Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 
-import { CardStatus, ICard } from '../../global/interfaces'
+import { CardStatus, ICard } from 'global/interfaces'
 
 export interface CardProps extends ICard {
   handleCardMenuOpen:  (event: React.MouseEvent<HTMLButtonElement>, cardId: string) => void
@@ -43,11 +43,12 @@ export const Card: React.FC<CardProps> = (props) => {
           ref={provided.innerRef}
           variant='outlined'
           theme={theme}
+          data-testid='card'
         >
           <CardHeader
             title={name}
             action={
-              <IconButton onClick={onCardSettingsClick} disableRipple>
+              <IconButton onClick={onCardSettingsClick} disableRipple data-testid='card-setting'>
                 <FontAwesomeIcon icon={faEllipsis} />
               </IconButton>
             }

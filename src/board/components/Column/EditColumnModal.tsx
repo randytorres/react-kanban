@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 
-import { IColumn } from '../../global/interfaces'
+import { IColumn } from 'global/interfaces'
 
 interface EditColumnModalProps {
   editColumnModalOpen: boolean
