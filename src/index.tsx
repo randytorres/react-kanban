@@ -1,19 +1,22 @@
 import React from 'react'
-import * as ReactDOM from "react-dom"
+import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import '@formatjs/intl-datetimeformat/polyfill'
 
 import { AppContainer } from 'app/components/AppContainer'
+
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import reportWebVitals from './reportWebVitals'
-
 import './index.css'
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+)
+
+root.render(
   <BrowserRouter>
     <AppContainer />
-  </BrowserRouter>,
-  document.getElementById('root') as HTMLElement
+  </BrowserRouter>
 )
 
 // If you want your app to work offline and load faster, you can change

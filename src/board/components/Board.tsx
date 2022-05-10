@@ -22,10 +22,8 @@ import {
 import { findItemById, getCardsInColumn, updateOrder } from '../utils/boardUtils'
 
 // TODO:
-  // Unit Tests
   // Add errorText to edit card/column modals
   // Add Comments
-  // Update readme
   // Deploy
 
 export const Board: React.FC = () => {
@@ -320,7 +318,7 @@ export const Board: React.FC = () => {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId='all-columns' direction='horizontal' type='column'>
         {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef} style={{ height: '100%', paddingBottom: 35 }}>
+          <div {...provided.droppableProps} ref={provided.innerRef} style={{ height: '95%' }}>
             <BoardContainer>
               {columns.map((col) => (
                 <Column
@@ -396,6 +394,7 @@ export const Board: React.FC = () => {
 const BoardContainer = styled.div({
   height: '100%',
   paddingTop: 10,
+  paddingRight: 20,
   flexDirection: 'row',
   display: 'flex',
   width: 'fit-content',
