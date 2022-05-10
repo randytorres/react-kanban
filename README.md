@@ -1,6 +1,10 @@
 # React Kanban Board 
 
-A simple kanban board built with React. Bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1 align="center">
+  <a href="https://react-kanban-torresr14.vercel.app/">View Deployed App</a>
+</h1>
+
+A simple kanban board built with React and Typescript. Bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ### Features Implemented
 - [x] User can add column with name
@@ -25,9 +29,11 @@ A simple kanban board built with React. Bootstrapped with [Create React App](htt
 
 ### Built With
 - [React](https://reactjs.org/)
+- [Typescript](https://www.typescriptlang.org/)
 - [Emotion Styled Components](https://emotion.sh/docs/styled)
 - [Material UI](https://mui.com/)
 - [React Beautiful DND](https://github.com/atlassian/react-beautiful-dnd)
+- [i18n](https://react.i18next.com/)
 
 # Getting Started
 To get a the project up and running in development mode, please follow these simple steps.
