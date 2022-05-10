@@ -8,7 +8,7 @@ import { AppContainer } from './AppContainer'
 
 const renderApp = () => {
   return render(
-    <BrowserRouter> 
+    <BrowserRouter>
       <AppContainer />
     </BrowserRouter>
   )
@@ -18,7 +18,7 @@ describe('AppContainer', () => {
   test('Defaults to Dark Mode', () => {
     renderApp()
     expect(screen.getByText('Dark Mode')).toBeInTheDocument()
-  }) 
+  })
 
   test('Changes to light mode on toggle', () => {
     renderApp()

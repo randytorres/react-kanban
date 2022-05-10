@@ -46,7 +46,7 @@ export const Board: React.FC = () => {
   const [cardAnchorEl, setCardAnchorEl] = React.useState<Element | null>(null)
 
   /**
-   * Helpers used to update localstorage and local state at the same time 
+   * Helpers used to update localstorage and local state at the same time
    */
   const saveColumns = (columnsToSave: IColumn[]) => {
     window.localStorage.setItem('columns', JSON.stringify(columnsToSave))
@@ -215,7 +215,7 @@ export const Board: React.FC = () => {
   }
 
   /**
-   * Removes card from `cards` array and moves to `archivedCards` 
+   * Removes card from `cards` array and moves to `archivedCards`
    */
   const onArchiveCard = () => {
     const newCards = Array.from(cards)
@@ -237,7 +237,7 @@ export const Board: React.FC = () => {
   }
 
   /**
-   * Finds index of card to update and updates in place  
+   * Finds index of card to update and updates in place
    */
   const handleCardStatusChange = (cardId: string, status: CardStatus) => {
     const newCards = Array.from(cards)

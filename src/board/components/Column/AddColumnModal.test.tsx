@@ -23,7 +23,7 @@ describe('AddColumnModal', () => {
 
     expect(mockAddColumnModalProps.toggleAddColumnModal).toHaveBeenCalled()
   })
-  
+
   test('Calls onAddColumn when a new column is created', async () => {
     const columnName = "My New Column"
     renderAddColumnModal()

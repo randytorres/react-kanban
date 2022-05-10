@@ -77,7 +77,7 @@ export const Column: React.FC<ColumnProps> = (props) => {
 
   const cardsWithColumnData = cards
     .filter(card => card.columnId === id)
-    .map(card => 
+    .map(card =>
       <Card
         key={card.id}
         {...card}

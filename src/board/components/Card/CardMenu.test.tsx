@@ -36,12 +36,12 @@ describe('Card', () => {
 
   test('Calls handleCardMenuClose when backdrop is clicked', () => {
     renderCardMenu()
-    
+
     fireEvent.keyDown(screen.getByRole('presentation'), {
       key: 'Escape',
       code: 'Escape'
     })
-  
+
     expect(mockCardMenuProps.handleCardMenuClose).toHaveBeenCalled()
   })
 })

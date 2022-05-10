@@ -23,7 +23,7 @@ describe('DeleteColumnModal', () => {
 
     expect(mockDeleteColumnModalProps.toggleDeleteColumnModal).toHaveBeenCalled()
   })
-  
+
   test('Calls onDeleteColumn when Delete button is clicked', async () => {
     renderDeleteColumnModal()
 

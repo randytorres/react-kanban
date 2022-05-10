@@ -7,7 +7,7 @@ import 'i18n/config'
 import { EditCardModal } from './EditCardModal'
 
 const mockEditCardModalProps = {
-  editCardModalOpen: true, 
+  editCardModalOpen: true,
   toggleEditCardModal: jest.fn(),
   onEditCardSave: jest.fn(),
   card: {
@@ -33,7 +33,7 @@ describe('EditCardModal', () => {
 
     expect(mockEditCardModalProps.toggleEditCardModal).toHaveBeenCalled()
   })
-  
+
   test('Calls onEditCardSave with new name/description when Update is clicked', async () => {
     const cardName = 'My New Card'
     const cardDescription = 'My new Description'

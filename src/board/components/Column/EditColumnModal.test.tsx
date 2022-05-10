@@ -28,7 +28,7 @@ describe('EditColumnModal', () => {
 
     expect(mockEditColumnModalProps.toggleEditColumnModal).toHaveBeenCalled()
   })
-  
+
   test('Calls onEditColumnSave with new name when Update is clicked', async () => {
     const columnName = 'My New Column'
     renderEditColumnModal()
