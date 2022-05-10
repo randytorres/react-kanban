@@ -45,6 +45,9 @@ export const Board: React.FC = () => {
   const [columnAnchorEl, setColumnAnchorEl] = React.useState<Element | null>(null)
   const [cardAnchorEl, setCardAnchorEl] = React.useState<Element | null>(null)
 
+  /**
+   * Helpers used to update localstorage and local state at the same time 
+   */
   const saveColumns = (columnsToSave: IColumn[]) => {
     window.localStorage.setItem('columns', JSON.stringify(columnsToSave))
     setColumns(columnsToSave)
@@ -82,6 +85,10 @@ export const Board: React.FC = () => {
     setColumnAnchorEl(null)
   }
 
+  /**
+   * Creates new column and adds to `columns` array
+   * Automatically closes add column modal
+   */
   const onAddColumn = (newColumnName: string) => {
     const newIndex = columns.length
     const newColumn = {
@@ -99,6 +106,10 @@ export const Board: React.FC = () => {
     toggleAddColumnModal()
   }
 
+  /**
+   * Finds index of column to update and updates column in place
+   * Automatically closes edit column modal and column menu
+   */
   const onEditColumnSave = (editColumnText: string) => {
     if (!columnToEdit) return
 
@@ -115,6 +126,9 @@ export const Board: React.FC = () => {
     handleColumnMenuClose()
   }
 
+  /**
+   * Removes column to delete from `columns` array
+   */
   const onDeleteColumn = () => {
     const newColumns = Array.from(columns)
 
@@ -156,6 +170,9 @@ export const Board: React.FC = () => {
     setEditCardModalOpen(!editCardModalOpen)
   }
 
+  /**
+   * Creates new card and adds to correct column
+   */
   const onAddCard = (cardName: string, description: string, columnId: string) => {
     const cardsInColumn = getCardsInColumn(cards, columnId)
     const newIndex = cardsInColumn.length
@@ -176,6 +193,10 @@ export const Board: React.FC = () => {
     saveCards(newCards)
   }
 
+  /**
+   * Finds index of card to update and updates card in place
+   * Automatically closes edit card modal and card menu
+   */
   const onEditCardSave = (name: string, description: string) => {
     if (!cardToEdit) return
 
@@ -193,6 +214,9 @@ export const Board: React.FC = () => {
     handleCardMenuClose()
   }
 
+  /**
+   * Removes card from `cards` array and moves to `archivedCards` 
+   */
   const onArchiveCard = () => {
     const newCards = Array.from(cards)
 
@@ -212,6 +236,9 @@ export const Board: React.FC = () => {
     handleCardMenuClose()
   }
 
+  /**
+   * Finds index of card to update and updates in place  
+   */
   const handleCardStatusChange = (cardId: string, status: CardStatus) => {
     const newCards = Array.from(cards)
 
